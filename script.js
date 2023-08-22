@@ -25,4 +25,5 @@ async function getPokemonData() {
 
     console.log(pokemonDataAsJSON);
 
+    return pokemonDataAsJSON;
 }

@@ -1,0 +1,39 @@
+.b-example-divider {
+    width: 100%;
+    height: 3rem;
+    background-color: rgba(0, 0, 0, .1);
+    border: solid rgba(0, 0, 0, .15);
+    border-width: 1px 0;
+    box-shadow: inset 0 0.5em 1.5em rgba(0, 0, 0, .1), inset 0 0.125em 0.5em rgba(0, 0, 0, .15);
+}
+
+.poke-water-blue {
+    background-color: #76BDFE !important;
+}
+
+.poke-grass-green {
+    background-color: #48D0B0 !important;
+}
+
+.background-picture {
+        position: relative;
+
+}
+
+.background-picture::after {
+    content : "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: url(/wp-content/uploads/2010/11/tandem.jpg); 
+    width: 100%;
+    height: 100%;
+    opacity : 0.2;
+    z-index: -1;
+}
+
+img {
+    overflow-clip-margin: 0px !important;
+    overflow: clip;
+}

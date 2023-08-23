@@ -2,7 +2,7 @@ const POKEMONNAMES = new Set(POKEMON);
 
 // stores key (pokemonName) and value (Pokemon JSON)
 let pokemonCache = new Map();
-
+let pokemonEvolution = new Map();
 let currentLoadedPokemon = 0; 
 
 // Next steps:
@@ -26,7 +26,7 @@ function init() {
 }
 
 async function transferPokemonIntoCache  (pokemon) {
-    let pokemonData = await getPokemonData(pokemon);
+    let pokemonData = await getPokemonData("pokemon", pokemon);
     pokemonCache.set(pokemon, pokemonData);
     return true;
 }
@@ -40,18 +40,54 @@ function readPokemonFromList(count) {
         } else if (pokemonCache.has(pokemon)){
             continue;
         }
+        pokemon = pokemon.toLowerCase();
         transferPokemonIntoCache(pokemon);
         index++;
     };
     return true;
 }
 
-async function getPokemonData(pokemon) {
-
-    pokemon = pokemon.toLowerCase();
-    let url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`;
+async function getPokemonData(requestTyp, pokemon) {
+    let url = `https://pokeapi.co/api/v2/${requestTyp}/${pokemon}`;
     let pokemonDataAsText = await fetch(url);
     let pokemonDataAsJSON = await pokemonDataAsText.json();
-    console.log(pokemonDataAsJSON);
     return pokemonDataAsJSON;
+}
+
+function getPokemonTyp(pokemon) {
+    // pokemonCache.get(pokemon)
+    // ["types"][0]["type"]["name"]
+
+    let pokemonObject = pokemonCache.get(pokemon);
+    let pokemonTyp = pokemonObject["types"][0]["type"]["name"];
+
+    return pokemonTyp;
+}
+
+function getPokemonSprite(pokemon) {
+    // ["sprites"]["front_default"]
+    // ["sprites"]["other"]["official-artwork"]["fron_defaul"]
+
+    let pokemonObject = pokemonCache.get(pokemon);
+    let pokemonSprite = pokemonObject["sprites"]["other"]["official-artwork"]["front_default"];
+
+    return pokemonSprite;
+}
+
+async function getPokemonEvolution () {
+    // https://pokeapi.co/api/v2/evolution-chain/
+    // 530 evolutions in total
+    // fetch url https://pokeapi.co/api/v2/evolution-chain/1/
+    // save all in an list
+    // get pokemon name from list 
+    // merge pokemon name with evolution list in a map
+    // const map() = ("pokemonName":"pokemonEvolutionList")
+    let rawEvolutionData;
+    let name; 
+    for (let index = 1; index <= 530; index++) {
+        rawEvolutionData = await getPokemonData("evolution-chain", index);
+        name = rawEvolutionData["chain"]["species"]["name"];
+        pokemonEvolution.set(name, rawEvolutionData);
+    }
+    return true   
 }

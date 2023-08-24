@@ -3,6 +3,7 @@ const POKEMONNAMES = new Set(POKEMON);
 // stores key (pokemonName) and value (Pokemon JSON)
 let pokemonCache = new Map();
 let pokemonEvolution = new Map();
+let pokemonSpecies = newMap();
 let currentLoadedPokemon = 0; 
 
 // Next steps:
@@ -17,11 +18,14 @@ let currentLoadedPokemon = 0;
 
 // getPokemonTyp 
 
+// getPokemonSpecies in order to read the corresponding evolution chain which is noch in the main pokemon json
+
 function init() {
 
     // call readPokemonFromList 12 times 
     // call following functions to process pokemon data
     // render 12 Pokemon Cards
+    // get Pokemon species for the 12 cards
 
 }
 
@@ -49,9 +53,13 @@ function readPokemonFromList(count) {
 
 async function getPokemonData(requestTyp, pokemon) {
     let url = `https://pokeapi.co/api/v2/${requestTyp}/${pokemon}`;
-    let pokemonDataAsText = await fetch(url);
+    let pokemonDataAsText = await fetch(url).catch(err(e)); //.catch(e) --> catch function for error handling
     let pokemonDataAsJSON = await pokemonDataAsText.json();
     return pokemonDataAsJSON;
+}
+
+function err (e){
+    console.log(`EORROR: ${e.name},  ${e.message}`);
 }
 
 function getPokemonTyp(pokemon) {
@@ -74,20 +82,30 @@ function getPokemonSprite(pokemon) {
     return pokemonSprite;
 }
 
-async function getPokemonEvolution () {
-    // https://pokeapi.co/api/v2/evolution-chain/
-    // 530 evolutions in total
-    // fetch url https://pokeapi.co/api/v2/evolution-chain/1/
-    // save all in an list
-    // get pokemon name from list 
-    // merge pokemon name with evolution list in a map
-    // const map() = ("pokemonName":"pokemonEvolutionList")
-    let rawEvolutionData;
-    let name; 
-    for (let index = 1; index <= 530; index++) {
-        rawEvolutionData = await getPokemonData("evolution-chain", index);
-        name = rawEvolutionData["chain"]["species"]["name"];
-        pokemonEvolution.set(name, rawEvolutionData);
-    }
-    return true   
+
+async function getPokemonSpecies(pokemon) {
+    let rawSpeciesData;
+    rawSpeciesData = await getPokemonData("pokemon-species", pokemon);
+    pokemonSpecies.set(pokemon, rawSpeciesData);
+    return true;
+}
+
+function getEvolutionChain (pokemon) {
+    if (!(pokemonSpecies.has(pokemon))) {
+        getPokemonSpecies(pokemon);
+    };
+    let pokemonObject = pokemonSpecies.get(pokemon);
+    let evolutionChain = pokemonObject["evolution_chain"]["url"];
+    let chainNumber = evolutionChain.splice(42, -1);
+    return chainNumber;
+
+    // what if evolution_chain returns NULL ?!
+}
+    
+
+async function getPokemonEvolution (pokemon) {
+    let chainNumber = getEvolutionChain(pokemon);
+    let rawEvolutionData = await getPokemonData("evolution-chain", chainNumber);
+    pokemonEvolution.set(pokemon, rawEvolutionData);
+    return true  
 }

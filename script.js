@@ -3,7 +3,7 @@ const POKEMONNAMES = new Set(POKEMON);
 // stores key (pokemonName) and value (Pokemon JSON)
 let pokemonCache = new Map();
 let pokemonEvolution = new Map();
-let pokemonSpecies = newMap();
+let pokemonSpecies = new Map();
 let currentLoadedPokemon = 0; 
 
 // Next steps:
@@ -51,34 +51,31 @@ function readPokemonFromList(count) {
     return true;
 }
 
-async function getPokemonData(requestTyp, pokemon) {
-    let url = `https://pokeapi.co/api/v2/${requestTyp}/${pokemon}`;
-    let pokemonDataAsText = await fetch(url).catch(err(e)); //.catch(e) --> catch function for error handling
+async function getPokemonData(requestTyp, id) {
+    let url = `https://pokeapi.co/api/v2/${requestTyp}/${id}`;
+    let pokemonDataAsText = await fetch(url).catch(); //.catch(e) --> catch function for error handling
     let pokemonDataAsJSON = await pokemonDataAsText.json();
     return pokemonDataAsJSON;
 }
 
-function err (e){
-    console.log(`EORROR: ${e.name},  ${e.message}`);
+function err (){
+    console.log(`EORROR`);
 }
 
 function getPokemonTyp(pokemon) {
     // pokemonCache.get(pokemon)
     // ["types"][0]["type"]["name"]
-
+    // TODO Loop for returning all typs 
     let pokemonObject = pokemonCache.get(pokemon);
     let pokemonTyp = pokemonObject["types"][0]["type"]["name"];
-
     return pokemonTyp;
 }
 
 function getPokemonSprite(pokemon) {
     // ["sprites"]["front_default"]
     // ["sprites"]["other"]["official-artwork"]["fron_defaul"]
-
     let pokemonObject = pokemonCache.get(pokemon);
     let pokemonSprite = pokemonObject["sprites"]["other"]["official-artwork"]["front_default"];
-
     return pokemonSprite;
 }
 
@@ -96,13 +93,12 @@ function getEvolutionChain (pokemon) {
     };
     let pokemonObject = pokemonSpecies.get(pokemon);
     let evolutionChain = pokemonObject["evolution_chain"]["url"];
-    let chainNumber = evolutionChain.splice(42, -1);
+    let chainNumber = evolutionChain.slice(42, -1);
     return chainNumber;
 
     // what if evolution_chain returns NULL ?!
 }
     
-
 async function getPokemonEvolution (pokemon) {
     let chainNumber = getEvolutionChain(pokemon);
     let rawEvolutionData = await getPokemonData("evolution-chain", chainNumber);

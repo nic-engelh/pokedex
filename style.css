@@ -15,6 +15,53 @@
     background-color: #48D0B0 !important;
 }
 
+.poke-fire-red {
+    background-color: #F56D6C !important;
+}
+
+.poke-electric-yellow {
+    background-color: #FBD870 !important;
+}
+
+.poke-normal-grey {
+    background-color: #B3BABD !important;
+}
+
+.poke-steel-grey {
+    background-color: #ADC2C2 !important;
+}
+
+.poke-ground-brown {
+    background-color: #9F9F8E !important;
+}
+
+.poke-fairy-pink {
+    background-color: #F47BC2 !important;
+}
+
+.poke-psychic-pink {
+    background-color: #F155B0 !important;
+}
+
+.poke-poison-violett {
+    background-color: #A37BA2 !important; /* or #90648E */
+}
+
+.poke-fighting-orange {
+    background-color: #E28850 !important;
+}
+.poke-dark-grey {
+    background-color: #707070 !important;
+}
+.poke-ghost-violet {
+    background-color: #735B9A !important;
+}
+.poke-ice-blue {
+    background-color: #70CEEB !important;
+}
+
+
+
 .background-picture {
         position: relative;
 

@@ -65,15 +65,12 @@ function err (){
 function getPokemonTyp(pokemon) {
     // pokemonCache.get(pokemon)
     // ["types"][0]["type"]["name"]
-    // TODO Loop for returning all typs 
     let pokemonObject = pokemonCache.get(pokemon);
     let pokemonType = [];
     for (const type of pokemonObject["types"]) {
         pokemonType.push(type["type"]["name"]); 
     }
-
-    // let pokemonType = pokemonObject["types"][0]["type"]["name"];
-    return pokemonType;
+    return pokemonType; // returns array of pokemon types
 }
 
 function getPokemonSprite(pokemon) {

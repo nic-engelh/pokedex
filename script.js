@@ -107,3 +107,42 @@ async function getPokemonEvolution (pokemon) {
     pokemonEvolution.set(pokemon, rawEvolutionData);
     return true  
 }
+
+function renderPokemonType (pokemonName) {
+    let container = document.getElementById(`${pokemonName}-type`);
+    let pokemonTyp = getPokemonTyp(pokemonName); 
+    for (const type of pokemonType) {
+        container.innerHTML += createPokemonBadgeTypeHTML (pokemonName, type);
+    };
+}
+
+function createPokemonBadgeTypeHTML (pokemonName, pokemonType) {
+    return /*html*/`
+        <span class="badge rounded-pill text-white text-bg-light bg-opacity-50">${pokemonType}</span>
+    `;
+}
+
+function createPokemonCardHTML (pokemonSprite, pokemonName, pokemonType, pokemonColor) {
+
+    return /*html*/`
+        <div class="col">
+            <div class="card h-50 rounded-4 shadow-lg poke-water-blue">
+                <div class="row h-25">
+                    <div class="col">
+                        <div class="card-body">
+                            <h3 class="card-title text-white  mb-4 display-6 lh-1 fw-bold">${pokemonName}</h3>
+                            <div class="container-fluid" id="${pokemonName}-type">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row h-75">
+                    <div class="col h-100">
+                        <img class="img-fluid h-100 float-end" src="${pokemonSprite}" alt="">Image of ${pokemonName}</img>
+                    </div>
+                </div>
+            </div>
+          </div>
+    `;
+
+}

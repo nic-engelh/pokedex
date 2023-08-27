@@ -5,7 +5,7 @@ const POKEMONCOLOR = new Map([
     ["electric", "poke-electric-yellow"],
     ["normal", "poke-normal-grey"],
     ["steel", "poke-steel-grey"],
-    ["ground", "poke-ground-brown"],
+    ["rock", "poke-rock-brown"],
     ["fairy", "poke-fairy-pink"],
     ["psychic", "poke-psychic-pink"],
     ["poison", "poke-poison-violett"],
@@ -13,7 +13,9 @@ const POKEMONCOLOR = new Map([
     ["dark", "poke-dark-grey"],
     ["ghost", "poke-ghost-violett"],
     ["ice", "poke-ice-blue"],
-    ["flying", "poke-flying-bluegrey"]
+    ["flying", "poke-flying-bluegrey"],
+    ["dragon", "poke-dragon-bluered"],
+    ["ground", "poke-ground-yellowbrown"]
 ]);
 
 

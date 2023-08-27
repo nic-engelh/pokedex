@@ -110,12 +110,27 @@ async function getPokemonEvolution (pokemon) {
     return true  
 }
 
+function renderPokemonCard (pokemonName){
+    let container = document.getElementById("card-container"); 
+    let sprite = getPokemonSprite(pokemonName);
+    container.innerHTML += createPokemonCardHTML(sprite, pokemonName);
+    renderPokemonType(pokemonName);
+    renderPokemonCardBackground(pokemonName);
+}
+
 function renderPokemonCardBackground (pokemonName) {
     let pokemonType = getPokemonType(pokemonName);
+    let typeColor = getTypeColor(pokemonType[0]);
     let cardContainer = document.getElementById(`${pokemonName}-card`);
-    cardContainer.classList.add(pokemonType[0]);
+
+    cardContainer.classList.add(typeColor);
     // TODO testing
     // TODO add doubles types to CSS/Const like ground and dragon
+}
+
+function getTypeColor(pokemonType) {
+    color = POKEMONCOLOR.get(pokemonType);
+    return color;
 }
 
 function renderPokemonType (pokemonName) {
@@ -132,7 +147,7 @@ function createPokemonBadgeTypeHTML (pokemonName, pokemonType) {
     `;
 }
 
-function createPokemonCardHTML (pokemonSprite, pokemonName, pokemonType, pokemonColor) {
+function createPokemonCardHTML (pokemonSprite, pokemonName) {
 
     return /*html*/`
         <div class="col">
@@ -148,7 +163,7 @@ function createPokemonCardHTML (pokemonSprite, pokemonName, pokemonType, pokemon
                 </div>
                 <div class="row h-75">
                     <div class="col h-100">
-                        <img class="img-fluid h-100 float-end" src="${pokemonSprite}" alt="">Image of ${pokemonName}</img>
+                        <img class="img-fluid h-100 float-end" src="${pokemonSprite}" alt="Image of ${pokemonName}"></img>
                     </div>
                 </div>
             </div>

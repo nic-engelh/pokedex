@@ -1,3 +1,22 @@
+const POKEMONCOLOR = new Map([
+    ["water", "poke-water-blue"],
+    ["grass", "poke-grass-green"],
+    ["fire", "poke-fire-red"],
+    ["electric", "poke-electric-yellow"],
+    ["normal", "poke-normal-grey"],
+    ["steel", "poke-steel-grey"],
+    ["ground", "poke-ground-brown"],
+    ["fairy", "poke-fairy-pink"],
+    ["psychic", "poke-psychic-pink"],
+    ["poison", "poke-poison-violett"],
+    ["fighting", "poke-fighting-orange"],
+    ["dark", "poke-dark-grey"],
+    ["ghost", "poke-ghost-violett"],
+    ["ice", "poke-ice-blue"],
+    ["flying", "poke-flying-bluegrey"]
+]);
+
+
 const POKEMON = [
   "Bulbasaur",
   "Ivysaur",

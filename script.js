@@ -18,7 +18,9 @@ let currentLoadedPokemon = 0;
 
 // getPokemonTyp 
 
-// getPokemonSpecies in order to read the corresponding evolution chain which is noch in the main pokemon json
+// getPokemonSpecies in order to read the corresponding evolution chain which is not in the main pokemon json
+
+// TODO: add combotypes like dragon ground 
 
 function init() {
 
@@ -62,7 +64,7 @@ function err (){
     console.log(`EORROR`);
 }
 
-function getPokemonTyp(pokemon) {
+function getPokemonType(pokemon) {
     // pokemonCache.get(pokemon)
     // ["types"][0]["type"]["name"]
     let pokemonObject = pokemonCache.get(pokemon);
@@ -108,9 +110,17 @@ async function getPokemonEvolution (pokemon) {
     return true  
 }
 
+function renderPokemonCardBackground (pokemonName) {
+    let pokemonType = getPokemonType(pokemonName);
+    let cardContainer = document.getElementById(`${pokemonName}-card`);
+    cardContainer.classList.add(pokemonType[0]);
+    // TODO testing
+    // TODO add doubles types to CSS/Const like ground and dragon
+}
+
 function renderPokemonType (pokemonName) {
     let container = document.getElementById(`${pokemonName}-type`);
-    let pokemonTyp = getPokemonTyp(pokemonName); 
+    let pokemonType = getPokemonType(pokemonName); 
     for (const type of pokemonType) {
         container.innerHTML += createPokemonBadgeTypeHTML (pokemonName, type);
     };
@@ -126,7 +136,7 @@ function createPokemonCardHTML (pokemonSprite, pokemonName, pokemonType, pokemon
 
     return /*html*/`
         <div class="col">
-            <div class="card h-50 rounded-4 shadow-lg poke-water-blue">
+            <div class="card h-50 rounded-4 shadow-lg " id="${pokemonName}-card">
                 <div class="row h-25">
                     <div class="col">
                         <div class="card-body">

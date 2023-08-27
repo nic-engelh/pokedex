@@ -31,7 +31,7 @@
     background-color: #ADC2C2 !important;
 }
 
-.poke-ground-brown {
+.poke-rock-brown {
     background-color: #9F9F8E !important;
 }
 
@@ -58,6 +58,21 @@
 }
 .poke-ice-blue {
     background-color: #70CEEB !important;
+}
+
+.poke-flying-bluegrey {
+    background: rgb(173,194,194) !important;
+    background: linear-gradient(0deg, rgba(173,194,194,1) 48%, rgba(112,206,235,1) 55%) !important;
+}
+
+.poke-dragon-bluered {
+    background: rgb(245,109,108) !important;
+    background: linear-gradient(0deg, rgba(245,109,108,1) 48%, rgba(118,189,254,1) 55%) !important;
+}
+
+.poke-ground-yellowbrown {
+    background: rgb(159,159,142) !important;
+    background: linear-gradient(0deg, rgba(159,159,142,1) 48%, rgba(251,216,112,1) 55%) !important;
 }
 
 .background-picture {

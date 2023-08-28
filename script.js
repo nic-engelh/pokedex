@@ -22,12 +22,27 @@ let currentLoadedPokemon = 0;
 
 // TODO: add combotypes like dragon ground 
 
-function init() {
+
+
+
+
+async function init() {
 
     // call readPokemonFromList 12 times 
     // call following functions to process pokemon data
     // render 12 Pokemon Cards
     // get Pokemon species for the 12 cards
+
+    await renderChart();
+    
+    const myModal = document.getElementById('myModal');
+    const myInput = document.getElementById('myInput');
+
+    //myModal.addEventListener('shown.bs.modal', () => {
+        //myInput.focus()
+    //});
+
+   
 
 }
 
@@ -116,6 +131,7 @@ function renderPokemonCard (pokemonName){
     container.innerHTML += createPokemonCardHTML(sprite, pokemonName);
     renderPokemonType(pokemonName);
     renderPokemonCardBackground(pokemonName);
+    return true;
 }
 
 function renderPokemonCardBackground (pokemonName) {

@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
-    <script src="data.js"></script>
+    <script src="const.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="charts.js"></script>
     <title>Pokedex</title>
@@ -24,6 +24,7 @@
         <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
         Launch modal
+
     </button>
 
     <!-- Modal -->
@@ -35,9 +36,7 @@
                     <h1 class="modal-title fs-5 text-light fw-bold" id="staticBackdropLabel">Yamask</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-    
                 <img class="img-fluid w-50" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/562.png" alt="">
-            
             </div>
             <div class="modal-body">
                 <nav>
@@ -51,16 +50,16 @@
                   <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
                         <ul class="list-group list-group-flush  pt-5 pb-2">
-                            <li class="list-group-item">Species: </li>
-                            <li class="list-group-item">Height: </li>
-                            <li class="list-group-item">Weight: </li>
-                            <li class="list-group-item">Abilities</li>
+                            <li class="list-group-item">Species: ${pokemonSpecie} </li>
+                            <li class="list-group-item">Height: ${pokemonHeight} </li>
+                            <li class="list-group-item">Weight: ${pokemonWeight} </li>
+                            <li class="list-group-item">Abilities: ${pokemonAbilities} </li>
                         </ul>
                         <h3>Breeding</h3>
                         <ul class="list-group list-group-flush pt-2 pb-2">
-                            <li class="list-group-item">Gender: </li>
-                            <li class="list-group-item">Egg Group: </li>
-                            <li class="list-group-item">Egg Cycle: </li>
+                            <li class="list-group-item">Gender: ${pokemonGender} </li>
+                            <li class="list-group-item">Egg Group: ${pokemonEggGroup} </li>
+                            <li class="list-group-item">Egg Cycle: ${pokemonEggCycle} </li>
                         </ul>
                     </div>
                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
@@ -69,7 +68,7 @@
                         </div> 
                     </div>
                     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">No Evolution</div>
-                    <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">Many</div>
+                    <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">${pokemonMoves}</div>
                 </div>
             </div>
         </div>

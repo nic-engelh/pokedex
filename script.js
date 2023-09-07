@@ -1,9 +1,12 @@
 const POKEMONNAMES = new Set(POKEMON);
 
-// stores key (pokemonName) and value (Pokemon JSON)
+// stores key (pokemonName) and value (Pokemon Main Data JSON)
 let pokemonCache = new Map();
+// stores key (pokemonName) and value (Pokemon Evolution Chain JSON)
 let pokemonEvolution = new Map();
+// stores key (pokemonName) and value (Pokemon Species JSON)
 let pokemonSpecies = new Map();
+// stores the current number of loaded Pokemon
 let currentLoadedPokemon = 0; 
 
 // Next steps:
@@ -13,18 +16,7 @@ let currentLoadedPokemon = 0;
 // readPokemonFromList returns 12 PokemonNames
 // those names are used to fetch the corresponding JSON via API
 
-// renderCards - a function which renders initial cards from pokemonCache according to the current Pokemon count
 // renderCurrentPokemonDetailCard - renders detail card of the clicked pokemons abilities
-
-// getPokemonTyp 
-
-// getPokemonSpecies in order to read the corresponding evolution chain which is not in the main pokemon json
-
-// TODO: add combotypes like dragon ground 
-
-
-
-
 
 async function init() {
 
@@ -34,15 +26,6 @@ async function init() {
     // get Pokemon species for the 12 cards
 
     await renderChart();
-    
-    const myModal = document.getElementById('myModal');
-    const myInput = document.getElementById('myInput');
-
-    //myModal.addEventListener('shown.bs.modal', () => {
-        //myInput.focus()
-    //});
-
-   
 
 }
 
@@ -70,7 +53,7 @@ function readPokemonFromList(count) {
 
 async function getPokemonData(requestTyp, id) {
     let url = `https://pokeapi.co/api/v2/${requestTyp}/${id}`;
-    let pokemonDataAsText = await fetch(url).catch(); //.catch(e) --> catch function for error handling
+    let pokemonDataAsText = await fetch(url).catch(err); //.catch(e) --> catch function for error handling
     let pokemonDataAsJSON = await pokemonDataAsText.json();
     return pokemonDataAsJSON;
 }
@@ -98,7 +81,7 @@ function getPokemonSprite(pokemon) {
     return pokemonSprite;
 }
 
-
+// getPokemonSpecies in order to read the corresponding evolution chain which is not in the main pokemon json
 async function getPokemonSpecies(pokemon) {
     let rawSpeciesData;
     rawSpeciesData = await getPokemonData("pokemon-species", pokemon);
@@ -125,6 +108,7 @@ async function getPokemonEvolution (pokemon) {
     return true  
 }
 
+// renderPokemonCard - a function which renders initial cards from pokemonCache according to the current Pokemon count
 function renderPokemonCard (pokemonName){
     let container = document.getElementById("card-container"); 
     let sprite = getPokemonSprite(pokemonName);
@@ -157,6 +141,10 @@ function renderPokemonType (pokemonName) {
     };
 }
 
+function renderPokemonModal (pokemonName){
+    // insert all html-create functions for modal or pokemon detail card/dialog here
+}
+
 function createPokemonBadgeTypeHTML (pokemonName, pokemonType) {
     return /*html*/`
         <span class="badge rounded-pill text-white text-bg-light bg-opacity-50">${pokemonType}</span>
@@ -164,10 +152,9 @@ function createPokemonBadgeTypeHTML (pokemonName, pokemonType) {
 }
 
 function createPokemonCardHTML (pokemonSprite, pokemonName) {
-
     return /*html*/`
         <div class="col">
-            <div class="card h-50 rounded-4 shadow-lg " id="${pokemonName}-card">
+            <div class="card h-50 rounded-4 shadow-lg" id="${pokemonName}-card" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="renderModal(${pokemonName})" >
                 <div class="row h-25">
                     <div class="col">
                         <div class="card-body">
@@ -185,5 +172,25 @@ function createPokemonCardHTML (pokemonSprite, pokemonName) {
             </div>
           </div>
     `;
+}
 
+function createPokemonModalListTopHTML () {
+    // insert into id="modal-body-list-1"
+    return /*html*/`
+        <li class="list-group-item">Species: ${pokemonSpecie}</li>
+                  <li class="list-group-item">Height: ${pokemonHeight}</li>
+                  <li class="list-group-item">Weight: ${pokemonWeight}</li>
+                  <li class="list-group-item">
+                    Abilities: ${pokemonAbilities}
+                  </li>
+    `
+}
+
+function createPokemonModalListBottomHTML () {
+    // insert into id="modal-body-list-2"
+    return /*html*/`
+        <li class="list-group-item">Gender: ${pokemonGender}</li>
+        <li class="list-group-item">Egg Group: ${pokemonEggGroup}</li>
+        <li class="list-group-item">Egg Cycle: ${pokemonEggCycle}</li>
+    `
 }

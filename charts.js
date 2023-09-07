@@ -8,7 +8,7 @@ function renderChart () {
       data: {
         labels: ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed'],
         datasets: [{
-          label: "Attributes",
+          label: "Attribute",
           data: [45, 60, 48, 65, 65, 45],
         }]
       },

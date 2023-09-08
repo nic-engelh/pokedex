@@ -1,81 +1,197 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme-light>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="style.css" />
     <script src="const.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="charts.js"></script>
     <title>Pokedex</title>
-</head>
-<body onload="init()">
+  </head>
+  <body onload="init()">
     <div class="b-example-divider"></div>
     <div class="container px-4 py-5" id="custom-cards">
-        <h2 class="pb-2 border-bottom">Pokedex</h2>
-        <div class="row row-cols-1 row-cols-md-2  row-cols-lg-4 align-items-stretch g-4 py-5" id="card-container">
-        </div>
+      <h2 class="pb-2 border-bottom">Pokedex</h2>
+      <div
+        class="row row-cols-1 row-cols-md-2 row-cols-lg-4 align-items-stretch g-4 py-5"
+        id="card-container"
+      >
+         <!-- Pokemon cards are inserted here -->
+      </div>
     </div>
     <div class="b-example-divider"></div>
-    
-        <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-        Launch modal
-
+    <!-- Button trigger modal -->
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#staticBackdrop"
+    >
+      Launch modal
     </button>
 
     <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <div
+      class="modal fade"
+      id="staticBackdrop"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
         <div class="modal-content h-75">
-            <div class="modal-header d-flex flex-column poke-ghost-violett">
-                <div class="container-fluid d-flex flex-row">
-                    <h1 class="modal-title fs-5 text-light fw-bold" id="staticBackdropLabel">Yamask</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <img class="img-fluid w-50" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/562.png" alt="">
+          <div 
+            class="modal-header d-flex flex-column poke-ghost-violett" 
+            id="modal-header"
+            >
+            <div class="container-fluid d-flex flex-row">
+              <h1
+                class="modal-title fs-5 text-light fw-bold"
+                id="staticBackdropLabel"
+              >
+                Yamask
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
-            <div class="modal-body">
-                <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                      <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">About</button>
-                      <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Base Stats</button>
-                      <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Evoultion</button>
-                      <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Moves</button>
-                    </div>
-                  </nav>
-                  <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
-                        <ul class="list-group list-group-flush  pt-5 pb-2">
-                            <li class="list-group-item">Species: ${pokemonSpecie} </li>
-                            <li class="list-group-item">Height: ${pokemonHeight} </li>
-                            <li class="list-group-item">Weight: ${pokemonWeight} </li>
-                            <li class="list-group-item">Abilities: ${pokemonAbilities} </li>
-                        </ul>
-                        <h3>Breeding</h3>
-                        <ul class="list-group list-group-flush pt-2 pb-2">
-                            <li class="list-group-item">Gender: ${pokemonGender} </li>
-                            <li class="list-group-item">Egg Group: ${pokemonEggGroup} </li>
-                            <li class="list-group-item">Egg Cycle: ${pokemonEggCycle} </li>
-                        </ul>
-                    </div>
-                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
-                        <div class="container-sm pt-4">
-                            <canvas id="myChart"></canvas>
-                        </div> 
-                    </div>
-                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">No Evolution</div>
-                    <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">${pokemonMoves}</div>
+            <img
+              class="img-fluid w-50"
+              src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/562.png"
+              alt=""
+              id="modal-header-image"
+            />
+          </div>
+          <div class="modal-body">
+            <nav>
+              <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button
+                  class="nav-link active"
+                  id="nav-home-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#nav-home"
+                  type="button"
+                  role="tab"
+                  aria-controls="nav-home"
+                  aria-selected="true"
+                >
+                  About
+                </button>
+                <button
+                  class="nav-link"
+                  id="nav-profile-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#nav-profile"
+                  type="button"
+                  role="tab"
+                  aria-controls="nav-profile"
+                  aria-selected="false"
+                >
+                  Base Stats
+                </button>
+                <button
+                  class="nav-link"
+                  id="nav-contact-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#nav-contact"
+                  type="button"
+                  role="tab"
+                  aria-controls="nav-contact"
+                  aria-selected="false"
+                >
+                  Evoultion
+                </button>
+                <button
+                  class="nav-link"
+                  id="nav-contact-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#nav-contact"
+                  type="button"
+                  role="tab"
+                  aria-controls="nav-contact"
+                  aria-selected="false"
+                >
+                  Moves
+                </button>
+              </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+              <div
+                class="tab-pane fade show active"
+                id="nav-home"
+                role="tabpanel"
+                aria-labelledby="nav-home-tab"
+                tabindex="0"
+              >
+                <ul class="list-group list-group-flush pt-5 pb-2" id="modal-body-list-1">
+                    <!-- Pokemon stats are inserted here -->
+                  <li class="list-group-item">Species: ${pokemonSpecie}</li>
+                  <li class="list-group-item">Height: ${pokemonHeight}</li>
+                  <li class="list-group-item">Weight: ${pokemonWeight}</li>
+                  <li class="list-group-item">
+                    Abilities: ${pokemonAbilities}
+                  </li>
+                </ul>
+                <h3>Breeding</h3>
+                <ul class="list-group list-group-flush pt-2 pb-2" id="modal-body-list-2">
+                    <!-- Pokemon breeding stats are inserted here -->
+                  <li class="list-group-item">Gender: ${pokemonGender}</li>
+                  <li class="list-group-item">Egg Group: ${pokemonEggGroup}</li>
+                  <li class="list-group-item">Egg Cycle: ${pokemonEggCycle}</li>
+                </ul>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="nav-profile"
+                role="tabpanel"
+                aria-labelledby="nav-profile-tab"
+                tabindex="0"
+              >
+                <div class="container-sm pt-4">
+                  <canvas id="myChart"></canvas>
                 </div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="nav-contact"
+                role="tabpanel"
+                aria-labelledby="nav-contact-tab"
+                tabindex="0"
+              >
+                No Evolution
+              </div>
+              <div
+                class="tab-pane fade"
+                id="nav-disabled"
+                role="tabpanel"
+                aria-labelledby="nav-disabled-tab"
+                tabindex="0"
+              >
+                ${pokemonMoves}
+              </div>
             </div>
+          </div>
         </div>
-        </div>
+      </div>
     </div>
-
-
     <script defer src="script.js"></script>
-</body>
+  </body>
 </html>

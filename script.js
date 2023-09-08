@@ -30,7 +30,7 @@ async function init() {
 }
 
 async function getPokemon (pokemon) {
-    let pokemonData = await getPokemonData("pokemon", pokemon);
+    let pokemonData = await getPokemonData(`pokemon`, pokemon);
     pokemonCache.set(pokemon, pokemonData);
     return true;
 }
@@ -67,8 +67,8 @@ function getPokemonType(pokemon) {
     // ["types"][0]["type"]["name"]
     let pokemonObject = pokemonCache.get(pokemon);
     let pokemonType = [];
-    for (const type of pokemonObject["types"]) {
-        pokemonType.push(type["type"]["name"]); 
+    for (const type of pokemonObject[`types`]) {
+        pokemonType.push(type[`type`][`name`]); 
     }
     return pokemonType; // returns array of pokemon types
 }
@@ -77,14 +77,14 @@ function getPokemonSprite(pokemon) {
     // ["sprites"]["front_default"]
     // ["sprites"]["other"]["official-artwork"]["front_defaul"]
     let pokemonObject = pokemonCache.get(pokemon);
-    let pokemonSprite = pokemonObject["sprites"]["other"]["official-artwork"]["front_default"];
+    let pokemonSprite = pokemonObject[`sprites`][`other`][`official-artwork`][`front_default`];
     return pokemonSprite;
 }
 
 // getPokemonSpecies in order to read the corresponding evolution chain which is not in the main pokemon json
 async function getPokemonSpecies(pokemon) {
     let rawSpeciesData;
-    rawSpeciesData = await getPokemonData("pokemon-species", pokemon);
+    rawSpeciesData = await getPokemonData(`pokemon-species`, pokemon);
     pokemonSpecies.set(pokemon, rawSpeciesData);
     return true;
 }
@@ -94,7 +94,7 @@ async function getEvolutionChain (pokemon) {
         await getPokemonSpecies(pokemon);
     };
     let pokemonObject = pokemonSpecies.get(pokemon);
-    let evolutionChain = await pokemonObject["evolution_chain"]["url"];
+    let evolutionChain = await pokemonObject[`evolution_chain`][`url`];
     let chainNumber = evolutionChain.slice(42, -1);
     return chainNumber;
 
@@ -103,14 +103,14 @@ async function getEvolutionChain (pokemon) {
     
 async function getPokemonEvolution (pokemon) {
     let chainNumber = await getEvolutionChain(pokemon);
-    let rawEvolutionData = await getPokemonData("evolution-chain", chainNumber);
+    let rawEvolutionData = await getPokemonData(`evolution-chain`, chainNumber);
     pokemonEvolution.set(pokemon, rawEvolutionData);
     return true  
 }
 
 // renderPokemonCard - a function which renders initial cards from pokemonCache according to the current Pokemon count
 function renderPokemonCard (pokemonName){
-    let container = document.getElementById("card-container"); 
+    let container = document.getElementById(`card-container`); 
     let sprite = getPokemonSprite(pokemonName);
     container.innerHTML += createPokemonCardHTML(sprite, pokemonName);
     renderPokemonType(pokemonName);
@@ -137,18 +137,54 @@ function renderPokemonType (pokemonName) {
     let container = document.getElementById(`${pokemonName}-type`);
     let pokemonType = getPokemonType(pokemonName); 
     for (const type of pokemonType) {
-        container.innerHTML += createPokemonBadgeTypeHTML (pokemonName, type);
+        container.innerHTML += createPokemonBadgeTypeHTML (type);
     };
 }
 
 function renderPokemonModal (pokemonName){
     // insert all html-create functions for modal or pokemon detail card/dialog here
+    changeModalImg(pokemonName);
+    changeModalHeaderBackground(pokemonName);
+    changeModalHeader(pokemonName);
 }
 
-function createPokemonBadgeTypeHTML (pokemonName, pokemonType) {
+function changeModalHeader (pokemonName) {
+    // add pokemon number 
+    // add pokemon types
+    let container = document.getElementById(`staticBackdropLabel`);
+    let pokemonType = getPokemonType(pokemonName);
+    container.innerHTML = ``;
+    container.innerHTML = pokemonName; 
+    for (const type of pokemonType) {
+        container.innerHTML += createPokemonBadgeTypeHTML(pokemonType);
+    };
+}
+
+function getPokemonIndex (pokemon) {
+    // reading the pokemon index of pokemonCache from the last version entry
+    let pokemonObject = pokemonCache.get(pokemon);
+    let pokemonIndex = pokemonObject[`game_indices`].pop();
+    return pokemonIndex[`game_index`];
+}
+
+function changeModalImg (pokemon) {
+    let sprite = getPokemonSprite(pokemon);
+    document.getElementById(`modal-header-image`).src = sprite;
+    return true;
+}
+
+function changeModalHeaderBackground (pokemon) {
+    let container = document.getElementById(`modal-header`);
+    let pokemonType = getPokemonType(pokemon);
+    let color =  getTypeColor(pokemonType);
+    container.classList.add(color);
+    return true;
+}
+
+function createPokemonBadgeTypeHTML (pokemonType) {
     return /*html*/`
         <span class="badge rounded-pill text-white text-bg-light bg-opacity-50">${pokemonType}</span>
-    `;
+    `   
 }
 
 function createPokemonCardHTML (pokemonSprite, pokemonName) {
@@ -174,7 +210,7 @@ function createPokemonCardHTML (pokemonSprite, pokemonName) {
     `;
 }
 
-function createPokemonModalListTopHTML () {
+function createPokemonModalListTopHTML (pokemonSpecie, pokemonHeight, pokemonWeight, pokemonAbilities) {
     // insert into id="modal-body-list-1"
     return /*html*/`
         <li class="list-group-item">Species: ${pokemonSpecie}</li>
@@ -183,14 +219,14 @@ function createPokemonModalListTopHTML () {
                   <li class="list-group-item">
                     Abilities: ${pokemonAbilities}
                   </li>
-    `
+    `;
 }
 
-function createPokemonModalListBottomHTML () {
+function createPokemonModalListBottomHTML (pokemonGender, pokemonEggGroup, pokemonEggCycle) {
     // insert into id="modal-body-list-2"
     return /*html*/`
         <li class="list-group-item">Gender: ${pokemonGender}</li>
         <li class="list-group-item">Egg Group: ${pokemonEggGroup}</li>
         <li class="list-group-item">Egg Cycle: ${pokemonEggCycle}</li>
-    `
+    `;
 }

@@ -122,7 +122,6 @@ function renderPokemonCardBackground (pokemonName) {
     let pokemonType = getPokemonType(pokemonName);
     let typeColor = getTypeColor(pokemonType[0]);
     let cardContainer = document.getElementById(`${pokemonName}-card`);
-
     cardContainer.classList.add(typeColor);
     // TODO testing
     // TODO add doubles types to CSS/Const like ground and dragon
@@ -153,11 +152,24 @@ function changeModalHeader (pokemonName) {
     // add pokemon types
     let container = document.getElementById(`staticBackdropLabel`);
     let pokemonType = getPokemonType(pokemonName);
-    container.innerHTML = ``;
+    container.innerHTML = clear();
     container.innerHTML = pokemonName; 
     for (const type of pokemonType) {
-        container.innerHTML += createPokemonBadgeTypeHTML(pokemonType);
+        container.innerHTML += createPokemonBadgeTypeHTML(type);
     };
+    container.innerHTML += getPokemonIndex(pokemonName);
+}
+
+function changeModalPokemonAbilities (pokemon) {
+    let container = document.getElementById(`modal-body-list-ability`);
+    let pokemonObject = pokemonCache.get(pokemon);
+    let pokemonAbilities = pokemonObject["abilities"];
+    container.innerHTML = clear();
+    // adding "Ability" label 
+    for (const ability of pokemonAbilities){
+        let abilityName = ability["ability"]["name"];
+        container.innerHTML +=  abilityName;
+    }
 }
 
 function getPokemonIndex (pokemon) {
@@ -179,6 +191,10 @@ function changeModalHeaderBackground (pokemon) {
     let color =  getTypeColor(pokemonType);
     container.classList.add(color);
     return true;
+}
+
+function clear () {
+    return ``;
 }
 
 function createPokemonBadgeTypeHTML (pokemonType) {

@@ -143,12 +143,6 @@
               >
                 <ul class="list-group list-group-flush pt-5 pb-2" id="modal-body-list-1">
                     <!-- Pokemon stats are inserted here -->
-                  <li class="list-group-item">Species: ${pokemonSpecie}</li>
-                  <li class="list-group-item">Height: ${pokemonHeight}</li>
-                  <li class="list-group-item">Weight: ${pokemonWeight}</li>
-                  <li class="list-group-item">
-                    Abilities: ${pokemonAbilities}
-                  </li>
                 </ul>
                 <h3>Breeding</h3>
                 <ul class="list-group list-group-flush pt-2 pb-2" id="modal-body-list-2">
@@ -166,7 +160,9 @@
                 tabindex="0"
               >
                 <div class="container-sm pt-4">
-                  <canvas id="myChart"></canvas>
+                  <canvas id="myChart">
+                    <!-- Pokemon base_stats are inserted here -->
+                  </canvas>
                 </div>
               </div>
               <div

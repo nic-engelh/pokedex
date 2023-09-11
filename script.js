@@ -108,6 +108,13 @@ async function getPokemonEvolution (pokemon) {
     return true  
 }
 
+function getPokemonIndex (pokemon) {
+    // reading the pokemon index of pokemonCache from the last version entry
+    let pokemonObject = pokemonCache.get(pokemon);
+    let pokemonIndex = pokemonObject[`game_indices`].pop();
+    return pokemonIndex[`game_index`];
+}
+
 // renderPokemonCard - a function which renders initial cards from pokemonCache according to the current Pokemon count
 function renderPokemonCard (pokemonName){
     let container = document.getElementById(`card-container`); 
@@ -145,18 +152,20 @@ function renderPokemonModal (pokemonName){
     changeModalImg(pokemonName);
     changeModalHeaderBackground(pokemonName);
     changeModalHeader(pokemonName);
+    changeModalPokemonAbilities(pokemonName);
 }
 
 function changeModalHeader (pokemonName) {
-    // add pokemon number 
-    // add pokemon types
     let container = document.getElementById(`staticBackdropLabel`);
     let pokemonType = getPokemonType(pokemonName);
     container.innerHTML = clear();
+    // adds pokemon name to the modal header
     container.innerHTML = pokemonName; 
+    // adds poekemon types
     for (const type of pokemonType) {
         container.innerHTML += createPokemonBadgeTypeHTML(type);
     };
+    // adds pokemon index
     container.innerHTML += getPokemonIndex(pokemonName);
 }
 
@@ -165,18 +174,12 @@ function changeModalPokemonAbilities (pokemon) {
     let pokemonObject = pokemonCache.get(pokemon);
     let pokemonAbilities = pokemonObject["abilities"];
     container.innerHTML = clear();
+    container.innerHTML = `Abilities: `
     // adding "Ability" label 
     for (const ability of pokemonAbilities){
         let abilityName = ability["ability"]["name"];
         container.innerHTML +=  abilityName;
     }
-}
-
-function getPokemonIndex (pokemon) {
-    // reading the pokemon index of pokemonCache from the last version entry
-    let pokemonObject = pokemonCache.get(pokemon);
-    let pokemonIndex = pokemonObject[`game_indices`].pop();
-    return pokemonIndex[`game_index`];
 }
 
 function changeModalImg (pokemon) {
@@ -190,6 +193,64 @@ function changeModalHeaderBackground (pokemon) {
     let pokemonType = getPokemonType(pokemon);
     let color =  getTypeColor(pokemonType);
     container.classList.add(color);
+    return true;
+}
+
+function getRandomPokemonFlavourText (pokemon) {
+    let pokemonObject = pokemonSpecies.get(pokemon);
+    let textObject = pokemonObject["flavor_text_entries"];
+    let size = textObject.length;
+    let random;
+    do {
+        random = Math.floor(Math.random() * size);
+    } while ( (textObject[random]['language']['name']) != 'en' );
+    return textObject[random][`flavor_text`];
+    // flavour text needs to cleared of \n \f with lastIndexOf() string method
+}
+
+
+function changeModalAboutSectionTop (pokemon) {
+    let container =  document.getElementById(`modal-body-list-1`);
+    let pokemonObject = pokemonCache.get(pokemon);
+    let flavourText = getRandomPokemonFlavourText(pokemon);
+    let height = pokemonObject[`height`];
+    let specie = pokemonObject[`species`][`name`];
+    let weight = pokemonObject[`weight`];
+    container.innerHTML = createPokemonModalListTopHTML (specie, height, weight, flavourText)
+}
+
+function changeModalAboutSectionBottom (pokemon) {
+    let container =  document.getElementById(`modal-body-list-2`);
+    let pokemonObject = pokemonSpecies.get(pokemon);
+    let genera = pokemonObject[`genera`][7];
+    let gender = pokemonObject[`gender_rate`];
+    gender = checkPokemonGender (gender);
+    let eggGroup1 = pokemonObject[`egg_groups`][0][`name`];
+    let eggGroup2 = pokemonObject[`egg_groups`][0][`name`];
+    // egg groups could be up to size 2 
+    let generation = pokemonObject[`generation`][`name`];
+    container.innerHTML = createPokemonModalListBottomHTML (genera, gender, eggGroup1, generation);
+}
+
+function checkPokemonGender (gender) {
+   let genderDetail = new Map([
+        ["-1", "unkown"],
+        ["8", "only female"],
+        ["0", "only male"]
+      ]);
+    let item = genderDetail.get(gender);
+    return item;
+} 
+
+function changeModalStatsSection (pokemon) {
+    let pokemonObject = pokemonCache.get(pokemon);
+    let hp = pokemonObject[`stats`][0][`base_stat`];
+    let attack = pokemonObject[stats][1][`base_stat`];
+    let defense = pokemonObject[stats][2][`base_stat`];
+    let specialAttack = pokemonObject[stats][3][`base_stat`];
+    let specialDefense = pokemonObject[stats][4][`base_stat`];
+    let speed = pokemonObject[stats][5][`base_stat`];
+    renderChart (hp, attack, defense, specialAttack, specialDefense, speed);
     return true;
 }
 
@@ -226,15 +287,15 @@ function createPokemonCardHTML (pokemonSprite, pokemonName) {
     `;
 }
 
-function createPokemonModalListTopHTML (pokemonSpecie, pokemonHeight, pokemonWeight, pokemonAbilities) {
+function createPokemonModalListTopHTML (pokemonSpecie, pokemonHeight, pokemonWeight) {
     // insert into id="modal-body-list-1"
     return /*html*/`
         <li class="list-group-item">Species: ${pokemonSpecie}</li>
-                  <li class="list-group-item">Height: ${pokemonHeight}</li>
-                  <li class="list-group-item">Weight: ${pokemonWeight}</li>
-                  <li class="list-group-item">
-                    Abilities: ${pokemonAbilities}
-                  </li>
+        <li class="list-group-item">Height: ${pokemonHeight}</li>
+        <li class="list-group-item">Weight: ${pokemonWeight}</li>
+        <li class="list-group-item" id="modal-body-list-ability" >
+        Abilities:
+        </li>
     `;
 }
 

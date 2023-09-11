@@ -1,5 +1,5 @@
 
-function renderChart () {
+function renderChart (hp, attack, defense, specialAttack, specialDefense, speed) {
 
   const ctx = document.getElementById('myChart');
 
@@ -9,7 +9,7 @@ function renderChart () {
         labels: ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed'],
         datasets: [{
           label: "Attribute",
-          data: [45, 60, 48, 65, 65, 45],
+          data: [hp, attack, defense, specialAttack, specialDefense, speed],
         }]
       },
       options: {

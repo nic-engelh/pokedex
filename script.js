@@ -268,6 +268,9 @@ function changeModalEvolutionSection(pokemon) {
     // check for base version of pokemon via species entries
     // save the evolution chain wihtin an cache array
     // loop through array and create html content of each pokemon evolution step
+    // corner case 1: one pokemon has several possibile evolutions variants
+    // corner case 2: every step has several possibile evolutions variants
+    // one pokemon has not more than theree evolutions except mega und gigantamax versions
 
     let pokemonObject = pokemonEvolution.get(pokemon);
     let basePokemon = pokemonObject['chain']['species']['name'];
@@ -278,17 +281,27 @@ function changeModalEvolutionSection(pokemon) {
     let evoStepFour =  basePokemonEvo[`chain`][`evolves_to`][0][`evolves_to`][0][`evolves_to`][0][`species`][`name`];
     
 }
+function getPokemonEvolutionsVariants (basePokemon) {
+    // loop through the array of evolves_to[i] and save all names into an array "evolutionsVariants"  
+    // e.g.: eevee
 
 
-function getPokemonEvolutionSteps (basePokemon) {
+}
+
+async function getPokemonEvolutionSteps (basePokemon) {
     let array = [];
     array.push(basePokemon);
+    let name = basePokemon;
+    let object = pokemonEvolution.get(name);
+    object = object[`chain`][`evolves_to`][0];
     do {
-        let name = item[`chain`][`evolves_to`][0][`species`][`name`];
-
-        array.push(item)
+        name = object[`species`][`name`];
+        // evolves_to array weiter verwenden
+        object = object[`evolves_to`][0];
+        array.push(name);
     }
-    while ( 1 ); // loop as long as evolves_to != null
+    while (object); // loop as long as evolves_to != null
+    return array;
 }
 
 function clear () {

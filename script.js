@@ -131,7 +131,6 @@ function renderPokemonCardBackground (pokemonName) {
     let cardContainer = document.getElementById(`${pokemonName}-card`);
     cardContainer.classList.add(typeColor);
     // TODO testing
-    // TODO add doubles types to CSS/Const like ground and dragon
 }
 
 function getTypeColor(pokemonType) {
@@ -153,6 +152,10 @@ function renderPokemonModal (pokemonName){
     changeModalHeaderBackground(pokemonName);
     changeModalHeader(pokemonName);
     changeModalPokemonAbilities(pokemonName);
+    changeModalAboutSectionTop (pokemonName); 
+    changeModalAboutSectionBottom (pokemonName);
+    changeModalStatsSection (pokemonName);
+    changeModalEvolutionSection(pokemonName);
 }
 
 function changeModalHeader (pokemonName) {
@@ -204,10 +207,16 @@ function getRandomPokemonFlavourText (pokemon) {
     do {
         random = Math.floor(Math.random() * size);
     } while ( (textObject[random]['language']['name']) != 'en' );
-    return textObject[random][`flavor_text`];
-    // flavour text needs to cleared of \n \f with lastIndexOf() string method
+    let clearedText = clearingString(textObject[random][`flavor_text`])
+    return clearedText;
 }
 
+// flavour text needs to cleared of \n \f with lastIndexOf() string method
+function clearingString (text) {
+    text = text.replaceAll("\n", " ");
+    text = text.replaceAll("\f", " ");
+    return text;    
+}
 
 function changeModalAboutSectionTop (pokemon) {
     let container =  document.getElementById(`modal-body-list-1`);
@@ -225,15 +234,16 @@ function changeModalAboutSectionBottom (pokemon) {
     let genera = pokemonObject[`genera`][7];
     let gender = pokemonObject[`gender_rate`];
     gender = checkPokemonGender (gender);
-    let eggGroup1 = pokemonObject[`egg_groups`][0][`name`];
-    let eggGroup2 = pokemonObject[`egg_groups`][0][`name`];
     // egg groups could be up to size 2 
+    // TODO case difference for 1 or 2 egg groups
+    let eggGroup1 = pokemonObject[`egg_groups`][0][`name`];
+    let eggGroup2 = pokemonObject[`egg_groups`][1][`name`];
     let generation = pokemonObject[`generation`][`name`];
-    container.innerHTML = createPokemonModalListBottomHTML (genera, gender, eggGroup1, generation);
+    container.innerHTML = createPokemonModalListBottomHTML (genera, gender, eggGroup1, eggGroup2, generation);
 }
 
 function checkPokemonGender (gender) {
-   let genderDetail = new Map([
+   const genderDetail = new Map([
         ["-1", "unkown"],
         ["8", "only female"],
         ["0", "only male"]
@@ -244,14 +254,41 @@ function checkPokemonGender (gender) {
 
 function changeModalStatsSection (pokemon) {
     let pokemonObject = pokemonCache.get(pokemon);
-    let hp = pokemonObject[`stats`][0][`base_stat`];
-    let attack = pokemonObject[stats][1][`base_stat`];
-    let defense = pokemonObject[stats][2][`base_stat`];
-    let specialAttack = pokemonObject[stats][3][`base_stat`];
-    let specialDefense = pokemonObject[stats][4][`base_stat`];
-    let speed = pokemonObject[stats][5][`base_stat`];
-    renderChart (hp, attack, defense, specialAttack, specialDefense, speed);
+    let attributes = [];
+    for (const item in pokemonObject[`stats`] ) {
+        attributes.push(item);
+    }
+    // array entry order: hp, attack, defense, specialAttack, specialDefense, speed
+    renderChart (attributes);
     return true;
+}
+
+function changeModalEvolutionSection(pokemon) {
+
+    // check for base version of pokemon via species entries
+    // save the evolution chain wihtin an cache array
+    // loop through array and create html content of each pokemon evolution step
+
+    let pokemonObject = pokemonEvolution.get(pokemon);
+    let basePokemon = pokemonObject['chain']['species']['name'];
+    let basePokemonEvo = pokemonEvolution.get(basePokemon);
+
+    let evoStepTwo =  basePokemonEvo[`chain`][`evolves_to`][0][`species`][`name`];
+    let evoStepThree =  basePokemonEvo[`chain`][`evolves_to`][0][`evolves_to`][0][`species`][`name`];
+    let evoStepFour =  basePokemonEvo[`chain`][`evolves_to`][0][`evolves_to`][0][`evolves_to`][0][`species`][`name`];
+    
+}
+
+
+function getPokemonEvolutionSteps (basePokemon) {
+    let array = [];
+    array.push(basePokemon);
+    do {
+        let name = item[`chain`][`evolves_to`][0][`species`][`name`];
+
+        array.push(item)
+    }
+    while ( 1 ); // loop as long as evolves_to != null
 }
 
 function clear () {
@@ -287,9 +324,10 @@ function createPokemonCardHTML (pokemonSprite, pokemonName) {
     `;
 }
 
-function createPokemonModalListTopHTML (pokemonSpecie, pokemonHeight, pokemonWeight) {
+function createPokemonModalListTopHTML (pokemonSpecie, pokemonHeight, pokemonWeight, pokemonFlavourText) {
     // insert into id="modal-body-list-1"
     return /*html*/`
+        <li class="list-group-item">Info: ${pokemonFlavourText}</li>
         <li class="list-group-item">Species: ${pokemonSpecie}</li>
         <li class="list-group-item">Height: ${pokemonHeight}</li>
         <li class="list-group-item">Weight: ${pokemonWeight}</li>
@@ -299,11 +337,25 @@ function createPokemonModalListTopHTML (pokemonSpecie, pokemonHeight, pokemonWei
     `;
 }
 
-function createPokemonModalListBottomHTML (pokemonGender, pokemonEggGroup, pokemonEggCycle) {
+
+// genera, gender, eggGroup1, generation
+function createPokemonModalListBottomHTML ( pokemonGenera, pokemonGender, pokemonEggGroup1, pokemonEggGroup2,  pokemonGeneration) {
     // insert into id="modal-body-list-2"
     return /*html*/`
+        <li class="list-group-item">Category: ${pokemonGenera}</li>
         <li class="list-group-item">Gender: ${pokemonGender}</li>
-        <li class="list-group-item">Egg Group: ${pokemonEggGroup}</li>
-        <li class="list-group-item">Egg Cycle: ${pokemonEggCycle}</li>
+        <li class="list-group-item">Egg Group: ${pokemonEggGroup1}</li>
+        <li class="list-group-item">Egg Group: ${pokemonEggGroup2}</li>
+        <li class="list-group-item">Generation: ${pokemonGeneration}</li>
     `;
+}
+
+function createPokemonEvolutionStepHTML (pokemonSprite,pokemonName, pokemonIndex) {
+    return /*html*/`
+        <div class="container-sm d-flex flex-column">
+                  <img class="h-50 w-50" src= "${pokemonSprite}" alt="Picutre of ${pokemonName}">
+                  <h5>${pokemonName}</h5>
+                  <h6>${pokemonIndex}</h6>
+                </div>
+    `
 }

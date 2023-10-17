@@ -9,24 +9,14 @@ let pokemonSpecies = new Map();
 // stores the current number of loaded Pokemon
 let currentLoadedPokemon = 0; 
 
-// Next steps:
-// load 12 pokemon into pokemonCache
-// pokemonCache = Map ("PokemonName": "pokemonDataAsJson")
-// call getPokemonData 12 times through readPokemonFromList(12) 
-// readPokemonFromList returns 12 PokemonNames
-// those names are used to fetch the corresponding JSON via API
-
-// renderCurrentPokemonDetailCard - renders detail card of the clicked pokemons abilities
-
 async function init() {
 
     // call readPokemonFromList 12 times 
     // call following functions to process pokemon data
     // render 12 Pokemon Cards
     // get Pokemon species for the 12 cards
-
-    await renderChart();
-
+    await getPokemon("yamask");
+    changeModalMoveSection("yamask");
 }
 
 async function getPokemon (pokemon) {
@@ -105,7 +95,7 @@ async function getPokemonEvolution (pokemon) {
     let chainNumber = await getEvolutionChain(pokemon);
     let rawEvolutionData = await getPokemonData(`evolution-chain`, chainNumber);
     pokemonEvolution.set(pokemon, rawEvolutionData);
-    return true  
+    return true;  
 }
 
 function getPokemonIndex (pokemon) {
@@ -156,6 +146,7 @@ function renderPokemonModal (pokemonName){
     changeModalAboutSectionBottom (pokemonName);
     changeModalStatsSection (pokemonName);
     changeModalEvolutionSection(pokemonName);
+    changeModalMoveSection(pokemonName);
 }
 
 function changeModalHeader (pokemonName) {
@@ -262,46 +253,114 @@ function changeModalStatsSection (pokemon) {
     renderChart (attributes);
     return true;
 }
-
 function changeModalEvolutionSection(pokemon) {
+    // TODO
+}
+function renderModalEvolutionSection(pokemon) { 
+    // TODO
 
+}
+
+function checkPokemonEvolution (pokemon) {
+    //TODO 
+    // function should check whenever a evolution has different variants or a normal evolution and therefore activate a specific function
+    let pokemonObject = pokemonEvolution.get(pokemon);
+    let pokemonEvolutionStep1 = pokemonObject['chain']['evolves_to']; // first evolution step
+    let pokemonEvolutionStep2 = pokemonObject['chain']['evolves_to'][0]['evolves_to']; // second/last evolutions steps 
+    let pokemonEvolutionStep3 = pokemonObject['chain']['evolves_to'][1]['evolves_to']; // second evolutions step from another evolution variant
+
+    if (pokemonEvolutionStep1.length > 1) {
+        //TODO
+        // special evolution path - variants on step 1 use getPokemonEvolutionSteps()
+        return false
+
+    } else if (pokemonEvolutionStep2.length > 1 || pokemonEvolutionStep3.length > 1) {
+        //TODO
+        // special evolution path - variants on step 2 use getPokemonEvolutionStepVariants()
+        return false
+    } else {
+        // normal evolution path - no variants
+        return true
+    }
+}
+
+function getPokemonEvolutionProcess(pokemon) {
     // check for base version of pokemon via species entries
     // save the evolution chain wihtin an cache array
     // loop through array and create html content of each pokemon evolution step
     // corner case 1: one pokemon has several possibile evolutions variants
     // corner case 2: every step has several possibile evolutions variants
     // one pokemon has not more than theree evolutions except mega und gigantamax versions
-
+    getPokemonEvolution(pokemon);
     let pokemonObject = pokemonEvolution.get(pokemon);
     let basePokemon = pokemonObject['chain']['species']['name'];
-    let basePokemonEvo = pokemonEvolution.get(basePokemon);
-
-    let evoStepTwo =  basePokemonEvo[`chain`][`evolves_to`][0][`species`][`name`];
-    let evoStepThree =  basePokemonEvo[`chain`][`evolves_to`][0][`evolves_to`][0][`species`][`name`];
-    let evoStepFour =  basePokemonEvo[`chain`][`evolves_to`][0][`evolves_to`][0][`evolves_to`][0][`species`][`name`];
-    
-}
-function getPokemonEvolutionsVariants (basePokemon) {
-    // loop through the array of evolves_to[i] and save all names into an array "evolutionsVariants"  
-    // e.g.: eevee
-
-
-}
-
-async function getPokemonEvolutionSteps (basePokemon) {
-    let array = [];
-    array.push(basePokemon);
-    let name = basePokemon;
-    let object = pokemonEvolution.get(name);
-    object = object[`chain`][`evolves_to`][0];
-    do {
-        name = object[`species`][`name`];
-        // evolves_to array weiter verwenden
-        object = object[`evolves_to`][0];
-        array.push(name);
+    // überprüfe für jedes Pokemon in EvolutionSteps ob weitere PokemonVarianten auf der Stufe verfügbar sind. Wenn ja speichere sie ab.
+    let pokemonEvolutionSteps;
+    if (checkPokemonEvolution(basePokemon)) {
+        pokemonEvolutionSteps = getPokemonEvolutionSteps(basePokemon);
+    } else {
+        pokemonEvolutionSteps = getPokemonEvolutionStepVariants(basePokemon)
     }
-    while (object); // loop as long as evolves_to != null
-    return array;
+    return pokemonEvolutionSteps;
+
+}
+
+function getPokemonEvolutionStepVariants (basePokemon) {
+    // TODO
+    // corner case 1: one pokemon (base variant) has several possibile evolutions variants but only one evolution step
+    // function can only reade the evolution variants form the base pokemon variant
+    // loop through the array of evolves_to[i] and save all names into an array "evolutionsVariants"  
+    // e.g.: eevee, wurmple, mime jr., poliwag, toxel, goommy, cosmog
+
+    let pokemonEvolutionVariants = [];
+    pokemonEvolutionVariants.push(basePokemon);
+    let pokemonObject = pokemonEvolution.get(basePokemon);
+    let pokemonObject1 = pokemonObject[`chain`][`evolves_to`]; // TODO check every evolution step for variants 
+    // pokemonObject2 = pokemonObject[`chain`][`evolves_to`][0][`evolves_to`] --> pokemon second evolution step
+    let pokemonObject2 = pokemonObject[`chain`][`evolves_to`][0][`evolves_to`];
+    
+    pokemonEvolutionVariants = loopingPokemonVariants(pokemonEvolutionVariants, pokemonObject1);
+    pokemonEvolutionVariants = loopingPokemonVariants(pokemonEvolutionVariants, pokemonObject2);
+    
+    return pokemonEvolutionVariants;
+}
+
+function loopingPokemonVariants (pokemonEvolutionVariants, pokemonObject) {
+    
+    for (const pokemonVariant of pokemonObject ) {
+        let pokemonVariantName = pokemonVariant[`species`][`name`];
+        pokemonEvolutionVariants.push(pokemonVariantName);
+    }
+    return pokemonEvolutionVariants;
+}
+
+function getPokemonEvolutionSteps (basePokemon) {
+    let basePokemonEvolutions = [];
+    basePokemonEvolutions.push(basePokemon);
+    let pokemonObject = pokemonEvolution.get(basePokemon);
+    // if (pokemonObject[`chain`][`evolves_to`][1]) ( getPokemonEvolutionStepVariants() )
+    // TODO try & catch error: if chain is over & cannot read undefiened
+    pokemonObject = pokemonObject[`chain`][`evolves_to`][0];
+    do {
+        // loops through all evolutions within a pokemon evolution chain until the end
+        basePokemon = pokemonObject[`species`][`name`];
+        pokemonObject = pokemonObject[`evolves_to`][0];
+        basePokemonEvolutions.push(basePokemon);
+    }
+    while (pokemonObject);
+    return basePokemonEvolutions;
+}
+
+ function changeModalMoveSection(pokemonName) {
+    let container = document.getElementById(`modal-body-list-moves`);
+    let pokemonObject = pokemonCache.get(pokemonName);
+    let pokemonMoves = pokemonObject["moves"];
+    container.innerHTML = clear();
+    // adding "Moves" label 
+    for (const move of pokemonMoves){
+        let moveName = move["move"]["name"];
+        container.innerHTML += createPokemonMovesListHTML (moveName);
+    }
 }
 
 function clear () {
@@ -370,5 +429,13 @@ function createPokemonEvolutionStepHTML (pokemonSprite,pokemonName, pokemonIndex
                   <h5>${pokemonName}</h5>
                   <h6>${pokemonIndex}</h6>
                 </div>
+    `
+}
+
+function createPokemonMovesListHTML (moveName) {
+    return /*html*/`
+        <div class="col-md-auto">
+            <span class="badge rounded-pill text-bg-secondary">${moveName}</span>          
+        </div>
     `
 }

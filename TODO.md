@@ -13,6 +13,7 @@
     
 # TODO
 - modal section for evolution chain has to be done
+- modal section for evolution chain corner cases has to be done 
 - modal section for learnable pokemon moves has to be done
 - modal section difference for 2 and 1 egg group
 

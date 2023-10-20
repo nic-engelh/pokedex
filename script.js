@@ -268,14 +268,10 @@ function checkPokemonEvolution (pokemon) {
     let pokemonEvolutionStep1 = pokemonObject['chain']['evolves_to']; // first evolution step
     let pokemonEvolutionStep2 = pokemonObject['chain']['evolves_to'][0]['evolves_to']; // second/last evolutions steps 
     let pokemonEvolutionStep3 = pokemonObject['chain']['evolves_to'][1]['evolves_to']; // second evolutions step from another evolution variant
-
     if (pokemonEvolutionStep1.length > 1) {
-        //TODO
         // special evolution path - variants on step 1 use getPokemonEvolutionSteps()
         return false
-
     } else if (pokemonEvolutionStep2.length > 1 || pokemonEvolutionStep3.length > 1) {
-        //TODO
         // special evolution path - variants on step 2 use getPokemonEvolutionStepVariants()
         return false
     } else {
@@ -294,29 +290,28 @@ function getPokemonEvolutionProcess(pokemon) {
     getPokemonEvolution(pokemon);
     let pokemonObject = pokemonEvolution.get(pokemon);
     let basePokemon = pokemonObject['chain']['species']['name'];
-    // überprüfe für jedes Pokemon in EvolutionSteps ob weitere PokemonVarianten auf der Stufe verfügbar sind. Wenn ja speichere sie ab.
-    let pokemonEvolutionSteps;
+    let pokemonEvolutionProcess;
     if (checkPokemonEvolution(basePokemon)) {
-        pokemonEvolutionSteps = getPokemonEvolutionSteps(basePokemon);
+        pokemonEvolutionProcess = getPokemonEvolutionSteps(basePokemon);
     } else {
-        pokemonEvolutionSteps = getPokemonEvolutionStepVariants(basePokemon)
+        //pokemon are no distinguished between evolution steps within the variable
+        pokemonEvolutionProcess = getPokemonEvolutionStepVariants(basePokemon);
     }
-    return pokemonEvolutionSteps;
-
+    return pokemonEvolutionProcess;
 }
 
 function getPokemonEvolutionStepVariants (basePokemon) {
-    // TODO
+    // new name: getPokmeonComplexEvolution ()
     // corner case 1: one pokemon (base variant) has several possibile evolutions variants but only one evolution step
-    // function can only reade the evolution variants form the base pokemon variant
+    // function can only read the evolution variants form the base pokemon variant
     // loop through the array of evolves_to[i] and save all names into an array "evolutionsVariants"  
     // e.g.: eevee, wurmple, mime jr., poliwag, toxel, goommy, cosmog
 
     let pokemonEvolutionVariants = [];
     pokemonEvolutionVariants.push(basePokemon);
     let pokemonObject = pokemonEvolution.get(basePokemon);
-    let pokemonObject1 = pokemonObject[`chain`][`evolves_to`]; // TODO check every evolution step for variants 
-    // pokemonObject2 = pokemonObject[`chain`][`evolves_to`][0][`evolves_to`] --> pokemon second evolution step
+    let pokemonObject1 = pokemonObject[`chain`][`evolves_to`];
+    // pokemon second evolution step
     let pokemonObject2 = pokemonObject[`chain`][`evolves_to`][0][`evolves_to`];
     
     pokemonEvolutionVariants = loopingPokemonVariants(pokemonEvolutionVariants, pokemonObject1);
@@ -335,11 +330,12 @@ function loopingPokemonVariants (pokemonEvolutionVariants, pokemonObject) {
 }
 
 function getPokemonEvolutionSteps (basePokemon) {
+    // new name: getPokemonBasicEvolution
     let basePokemonEvolutions = [];
     basePokemonEvolutions.push(basePokemon);
     let pokemonObject = pokemonEvolution.get(basePokemon);
     // if (pokemonObject[`chain`][`evolves_to`][1]) ( getPokemonEvolutionStepVariants() )
-    // TODO try & catch error: if chain is over & cannot read undefiened
+    // TODO: try & catch error: if chain is over & cannot read undefiened
     pokemonObject = pokemonObject[`chain`][`evolves_to`][0];
     do {
         // loops through all evolutions within a pokemon evolution chain until the end

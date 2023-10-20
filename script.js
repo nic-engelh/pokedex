@@ -261,47 +261,23 @@ function renderModalEvolutionSection(pokemon) {
 
 }
 
-function checkPokemonEvolution (pokemon) {
-    //TODO 
-    // function should check whenever a evolution has different variants or a normal evolution and therefore activate a specific function
-    let pokemonObject = pokemonEvolution.get(pokemon);
-    let pokemonEvolutionStep1 = pokemonObject['chain']['evolves_to']; // first evolution step
-    let pokemonEvolutionStep2 = pokemonObject['chain']['evolves_to'][0]['evolves_to']; // second/last evolutions steps 
-    let pokemonEvolutionStep3 = pokemonObject['chain']['evolves_to'][1]['evolves_to']; // second evolutions step from another evolution variant
-    if (pokemonEvolutionStep1.length > 1) {
-        // special evolution path - variants on step 1 use getPokemonEvolutionSteps()
-        return false
-    } else if (pokemonEvolutionStep2.length > 1 || pokemonEvolutionStep3.length > 1) {
-        // special evolution path - variants on step 2 use getPokemonEvolutionStepVariants()
-        return false
-    } else {
-        // normal evolution path - no variants
-        return true
-    }
-}
-
-function getPokemonEvolutionProcess(pokemon) {
+async function getPokemonEvolutionProcess(pokemon) {
     // check for base version of pokemon via species entries
     // save the evolution chain wihtin an cache array
     // loop through array and create html content of each pokemon evolution step
     // corner case 1: one pokemon has several possibile evolutions variants
     // corner case 2: every step has several possibile evolutions variants
     // one pokemon has not more than theree evolutions except mega und gigantamax versions
-    getPokemonEvolution(pokemon);
+    await getPokemonEvolution(pokemon);
     let pokemonObject = pokemonEvolution.get(pokemon);
     let basePokemon = pokemonObject['chain']['species']['name'];
-    let pokemonEvolutionProcess;
-    if (checkPokemonEvolution(basePokemon)) {
-        pokemonEvolutionProcess = getPokemonEvolutionSteps(basePokemon);
-    } else {
-        //pokemon are no distinguished between evolution steps within the variable
-        pokemonEvolutionProcess = getPokemonEvolutionStepVariants(basePokemon);
-    }
+    let pokemonEvolutionProcess = getPokemonEvolutionSteps(basePokemon);
+   
     return pokemonEvolutionProcess;
 }
 
-function getPokemonEvolutionStepVariants (basePokemon) {
-    // new name: getPokmeonComplexEvolution ()
+function getPokemonEvolutionSteps (basePokemon) {
+    // new name: getPokmeonComplexEvolution () --> before 
     // corner case 1: one pokemon (base variant) has several possibile evolutions variants but only one evolution step
     // function can only read the evolution variants form the base pokemon variant
     // loop through the array of evolves_to[i] and save all names into an array "evolutionsVariants"  
@@ -313,39 +289,30 @@ function getPokemonEvolutionStepVariants (basePokemon) {
     let pokemonObject1 = pokemonObject[`chain`][`evolves_to`];
     // pokemon second evolution step
     let pokemonObject2 = pokemonObject[`chain`][`evolves_to`][0][`evolves_to`];
-    
-    pokemonEvolutionVariants = loopingPokemonVariants(pokemonEvolutionVariants, pokemonObject1);
-    pokemonEvolutionVariants = loopingPokemonVariants(pokemonEvolutionVariants, pokemonObject2);
-    
+    // TODO: use nested arrays each subarray for a evolution step
+    let pokemonArray = loopingPokemonVariants(pokemonObject1);
+    if (pokemonObject2.length > 0){
+        let pokemonArray2 = loopingPokemonVariants(pokemonObject2);
+        pokemonEvolutionVariants.push(pokemonArray, pokemonArray2);
+    } else {
+        pokemonEvolutionVariants.push(pokemonArray);
+    }
     return pokemonEvolutionVariants;
 }
 
-function loopingPokemonVariants (pokemonEvolutionVariants, pokemonObject) {
-    
+function loopingPokemonVariants (pokemonObject) {
+    let variants = [];
     for (const pokemonVariant of pokemonObject ) {
         let pokemonVariantName = pokemonVariant[`species`][`name`];
-        pokemonEvolutionVariants.push(pokemonVariantName);
+        variants.push(pokemonVariantName);
     }
-    return pokemonEvolutionVariants;
+    if (variants.length > 1) {
+        return variants;
+    }
+    let variant = variants.pop() 
+        return variant;
 }
 
-function getPokemonEvolutionSteps (basePokemon) {
-    // new name: getPokemonBasicEvolution
-    let basePokemonEvolutions = [];
-    basePokemonEvolutions.push(basePokemon);
-    let pokemonObject = pokemonEvolution.get(basePokemon);
-    // if (pokemonObject[`chain`][`evolves_to`][1]) ( getPokemonEvolutionStepVariants() )
-    // TODO: try & catch error: if chain is over & cannot read undefiened
-    pokemonObject = pokemonObject[`chain`][`evolves_to`][0];
-    do {
-        // loops through all evolutions within a pokemon evolution chain until the end
-        basePokemon = pokemonObject[`species`][`name`];
-        pokemonObject = pokemonObject[`evolves_to`][0];
-        basePokemonEvolutions.push(basePokemon);
-    }
-    while (pokemonObject);
-    return basePokemonEvolutions;
-}
 
  function changeModalMoveSection(pokemonName) {
     let container = document.getElementById(`modal-body-list-moves`);

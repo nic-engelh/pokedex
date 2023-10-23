@@ -15,12 +15,13 @@ async function init() {
     // call following functions to process pokemon data
     // render 12 Pokemon Cards
     // get Pokemon species for the 12 cards
-    await getPokemon("growlithe");
-    changeModalMoveSection("growlithe");
-    changeModalEvolutionSection("growlithe");
+    await getPokemon("pikachu");
+    await getPokemonSpecies("pikachu");
+    renderPokemonModal("pikachu");
 }
 
 async function getPokemon (pokemon) {
+    if (pokemonCache.get(pokemon)){return false};
     let pokemonData = await getPokemonData("pokemon", pokemon);
     pokemonCache.set(pokemon, pokemonData);
     return true;
@@ -125,7 +126,8 @@ function renderPokemonCardBackground (pokemonName) {
 }
 
 function getTypeColor(pokemonType) {
-    color = POKEMONCOLOR.get(pokemonType);
+    let type = pokemonType.pop();
+    color = POKEMONCOLOR.get(type);
     return color;
 }
 
@@ -137,14 +139,14 @@ function renderPokemonType (pokemonName) {
     };
 }
 
-function renderPokemonModal (pokemonName){
+async function renderPokemonModal (pokemonName){
     // insert all html-create functions for modal or pokemon detail card/dialog here
     changeModalImg(pokemonName);
     changeModalHeaderBackground(pokemonName);
     changeModalHeader(pokemonName);
-    changeModalPokemonAbilities(pokemonName);
-    changeModalAboutSectionTop (pokemonName); 
+    await changeModalAboutSectionTop (pokemonName); 
     changeModalAboutSectionBottom (pokemonName);
+    changeModalPokemonAbilities(pokemonName);
     changeModalStatsSection (pokemonName);
     changeModalEvolutionSection(pokemonName);
     changeModalMoveSection(pokemonName);
@@ -191,8 +193,8 @@ function changeModalHeaderBackground (pokemon) {
     return true;
 }
 
-function getRandomPokemonFlavourText (pokemon) {
-    let pokemonObject = pokemonSpecies.get(pokemon);
+async function getRandomPokemonFlavourText (pokemon) {
+    let pokemonObject = await pokemonSpecies.get(pokemon);
     let textObject = pokemonObject["flavor_text_entries"];
     let size = textObject.length;
     let random;
@@ -210,10 +212,10 @@ function clearingString (text) {
     return text;    
 }
 
-function changeModalAboutSectionTop (pokemon) {
+async function changeModalAboutSectionTop (pokemon) {
     let container =  document.getElementById(`modal-body-list-1`);
     let pokemonObject = pokemonCache.get(pokemon);
-    let flavourText = getRandomPokemonFlavourText(pokemon);
+    let flavourText = await getRandomPokemonFlavourText(pokemon);
     let height = pokemonObject["height"];
     let specie = pokemonObject["species"]["name"];
     let weight = pokemonObject["weight"];
@@ -229,9 +231,10 @@ function changeModalAboutSectionBottom (pokemon) {
     // egg groups could be up to size 2 
     // TODO case difference for 1 or 2 egg groups
     let eggGroup1 = pokemonObject["egg_groups"][0]["name"];
-    let eggGroup2 = pokemonObject["egg_groups"][1]["name"];
+    // let eggGroup2 = pokemonObject["egg_groups"][1]["name"];
     let generation = pokemonObject["generation"]["name"];
-    container.innerHTML = createPokemonModalListBottomHTML (genera, gender, eggGroup1, eggGroup2, generation);
+    // add eggGroup2 
+    container.innerHTML = createPokemonModalListBottomHTML (genera, gender, eggGroup1, generation);
 }
 
 function checkPokemonGender (gender) {
@@ -254,30 +257,53 @@ function changeModalStatsSection (pokemon) {
     renderChart (attributes);
     return true;
 }
+
 async function changeModalEvolutionSection(pokemon) {
-    // TODO
     let element = document.getElementById("modal-body-evolution");
     element.innerHTML = clear();
     let pokemonArray = await getPokemonEvolutionProcess(pokemon);
-    renderModalEvolutionSection(pokemonArray, element);
+    loopingPokemonEvolutionSteps(pokemonArray, element, true);
     return true;
 }
-async function renderModalEvolutionSection(pokemonArray, element) { 
-    // TODO
+async function loopingPokemonEvolutionSteps(pokemonArray, element, addArrow) { 
     // loop through array and create html content of each pokemon evolution step
     for (const pokemon of pokemonArray) {
         if (Array.isArray(pokemon)){
-            renderModalEvolutionSection(pokemon, element);
+            // TODO change element into new div 
+            let newElement = await renderDiv(element);
+            addArrow = false;
+            await loopingPokemonEvolutionSteps(pokemon, newElement, addArrow);
         }
         else { 
-            await getPokemon(pokemon);
-            let sprite = getPokemonSprite(pokemon);
-            let index = getPokemonIndex(pokemon);
-            element.innerHTML += createPokemonEvolutionStepHTML(sprite,pokemon,index);
-            element.innerHTML += createChevronHTML();
+            await renderModalEvolutionSection (pokemon, element, addArrow);
         }
     }
 }
+
+function renderDiv (oldElement) {
+    oldElement.innerHTML += createDivHTML("modal-body-evolution-variant-box");
+    let newElement = document.getElementById("modal-body-evolution-variant-box");
+    return newElement;
+}
+
+function createDivHTML (id) {
+    return /*html*/`
+        <div class="col-3" id="${id}">
+        </div>  
+    `;
+}
+
+async function renderModalEvolutionSection (pokemon, element, addArrow) {
+    await getPokemon(pokemon);
+    let sprite = getPokemonSprite(pokemon);
+    let index = getPokemonIndex(pokemon);
+    element.innerHTML += createPokemonEvolutionStepHTML(sprite,pokemon,index);
+    if (addArrow)  {
+        element.innerHTML += createChevronHTML();
+    }
+    
+}
+
 
 async function getPokemonEvolutionProcess(pokemon) {
     // check for base version of pokemon via species entries
@@ -286,16 +312,16 @@ async function getPokemonEvolutionProcess(pokemon) {
     await getPokemonEvolution(pokemon);
     let pokemonObject = pokemonEvolution.get(pokemon);
     let basePokemon = pokemonObject["chain"]["species"]["name"];
+    await getPokemonEvolution(basePokemon);
     let pokemonEvolutionProcess = getPokemonEvolutionSteps(basePokemon);
     return pokemonEvolutionProcess;
 }
 
-function getPokemonEvolutionSteps (basePokemon) {
+async function getPokemonEvolutionSteps (basePokemon) {
     // loop through the array of evolves_to[i] and save all names into an array "evolutionsVariants"  
-    // e.g.: eevee, wurmple, mime-jr, poliwag, cosmog
     let pokemonEvolutionVariants = [];
     pokemonEvolutionVariants.push(basePokemon);
-    let pokemonObject = pokemonEvolution.get(basePokemon);
+    let pokemonObject = await pokemonEvolution.get(basePokemon);
     let pokemonObject1 = pokemonObject["chain"]["evolves_to"];
     // pokemon second evolution step
     let pokemonObject2 = pokemonObject["chain"]["evolves_to"][0]["evolves_to"];
@@ -393,10 +419,10 @@ function createPokemonModalListBottomHTML ( pokemonGenera, pokemonGender, pokemo
 
 function createPokemonEvolutionStepHTML (pokemonSprite,pokemonName, pokemonIndex) {
     return /*html*/`
-        <div class="col-4" id="modal-body-evolution-Step-${pokemonName}">
+        <div class="col" id="modal-body-evolution-Step-${pokemonName}">
             <img class="h-50 w-50" src= "${pokemonSprite}" alt="Picutre of ${pokemonName}">
-            <h5>${pokemonName}</h5>
-            <h6>${pokemonIndex}</h6>
+            <h6>${pokemonName}</h6>
+            <h6>#${pokemonIndex}</h6>
         </div>
     `
 }

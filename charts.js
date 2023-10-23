@@ -11,7 +11,7 @@ function renderChart (attributes) {
         labels: ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed'],
         datasets: [{
           label: "Attribute",
-          data: [attributes[0], attributes[1], attributes[2], attributes[3], attributes[4], attributes[5]],
+          data: [attributes[0]["base_stat"], attributes[1]["base_stat"], attributes[2]["base_stat"], attributes[3]["base_stat"], attributes[4]["base_stat"], attributes[5]["base_stat"]],
         }]
       },
       options: {

@@ -9,15 +9,16 @@ let pokemonSpecies = new Map();
 // stores the current number of loaded Pokemon
 let currentLoadedPokemon = 0; 
 
-async function init() {
+// TODO pokemonOrder map - copying the pokemoncache map for the card overview
 
+async function init() {
     // call readPokemonFromList 12 times 
     // call following functions to process pokemon data
     // render 12 Pokemon Cards
     // get Pokemon species for the 12 cards
-    await getPokemon("pikachu");
-    await getPokemonSpecies("pikachu");
-    renderPokemonModal("pikachu");
+    await getPokemon("baxcalibur");
+    await getPokemonSpecies("baxcalibur");
+    renderPokemonModal("baxcalibur");
 }
 
 async function getPokemon (pokemon) {
@@ -103,8 +104,8 @@ async function getPokemonEvolution (pokemon) {
 function getPokemonIndex (pokemon) {
     // reading the pokemon index of pokemonCache from the last version entry
     let pokemonObject = pokemonCache.get(pokemon);
-    let pokemonIndex = pokemonObject["game_indices"].pop();
-    return pokemonIndex["game_index"];
+    let pokemonIndex = pokemonObject["id"];
+    return pokemonIndex;
 }
 
 // renderPokemonCard - a function which renders initial cards from pokemonCache according to the current Pokemon count
@@ -176,6 +177,7 @@ function changeModalPokemonAbilities (pokemon) {
     for (const ability of pokemonAbilities){
         let abilityName = ability["ability"]["name"];
         container.innerHTML +=  abilityName;
+        container.innerHTML += ` `;
     }
 }
 
@@ -222,10 +224,10 @@ async function changeModalAboutSectionTop (pokemon) {
     container.innerHTML = createPokemonModalListTopHTML (specie, height, weight, flavourText)
 }
 
-function changeModalAboutSectionBottom (pokemon) {
+async function changeModalAboutSectionBottom (pokemon) {
     let container =  document.getElementById("modal-body-list-2");
     let pokemonObject = pokemonSpecies.get(pokemon);
-    let genera = pokemonObject["genera"][7];
+    let genera = await getPokemonGenera(pokemonObject["genera"]);
     let gender = pokemonObject["gender_rate"];
     gender = checkPokemonGender (gender);
     // egg groups could be up to size 2 
@@ -237,14 +239,26 @@ function changeModalAboutSectionBottom (pokemon) {
     container.innerHTML = createPokemonModalListBottomHTML (genera, gender, eggGroup1, generation);
 }
 
+function getPokemonGenera (pokemonGenera){
+    // pokemonObject["genera"]
+    for (const item of pokemonGenera) {
+        let languageCheck = item["language"]["name"];
+        if ( languageCheck === "en"){
+            return item["genus"];
+        }
+        continue
+    }
+    return false;
+}
+
 function checkPokemonGender (gender) {
-   const genderDetail = new Map([
-        ["-1", "unkown"],
-        ["8", "only female"],
-        ["0", "only male"]
-      ]);
-    let item = genderDetail.get(gender);
-    return item;
+   if (gender == 8){
+        return "only female";   
+   } if (gender==0) {
+        return "only male";
+   } else {
+        return "unkown";
+   }
 } 
 
 function changeModalStatsSection (pokemon) {
@@ -275,6 +289,9 @@ async function loopingPokemonEvolutionSteps(pokemonArray, element, addArrow) {
             await loopingPokemonEvolutionSteps(pokemon, newElement, addArrow);
         }
         else { 
+            if (pokemon === (pokemonArray.slice(-1)[0])){
+                addArrow = false;
+            }
             await renderModalEvolutionSection (pokemon, element, addArrow);
         }
     }
@@ -406,13 +423,12 @@ function createPokemonModalListTopHTML (pokemonSpecie, pokemonHeight, pokemonWei
 }
 
 // genera, gender, eggGroup1, generation
-function createPokemonModalListBottomHTML ( pokemonGenera, pokemonGender, pokemonEggGroup1, pokemonEggGroup2,  pokemonGeneration) {
+function createPokemonModalListBottomHTML ( pokemonGenera, pokemonGender, pokemonEggGroup1, pokemonGeneration) {
     // insert into id="modal-body-list-2"
     return /*html*/`
         <li class="list-group-item">Category: ${pokemonGenera}</li>
         <li class="list-group-item">Gender: ${pokemonGender}</li>
         <li class="list-group-item">Egg Group: ${pokemonEggGroup1}</li>
-        <li class="list-group-item">Egg Group: ${pokemonEggGroup2}</li>
         <li class="list-group-item">Generation: ${pokemonGeneration}</li>
     `;
 }

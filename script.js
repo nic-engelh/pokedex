@@ -16,10 +16,16 @@ async function init() {
     // call following functions to process pokemon data
     // render 12 Pokemon Cards
     // get Pokemon species for the 12 cards
-    await getPokemon("baxcalibur");
-    await getPokemonSpecies("baxcalibur");
-    renderPokemonModal("baxcalibur");
+    readPokemonFromList(24);
 }
+
+function renderPokemonCardsOverview () {
+    for (let index = 0; index < currentLoadedPokemon; index++) {
+        let element = POKEMONNAMES[index];
+        
+    }
+}
+
 
 async function getPokemon (pokemon) {
     if (pokemonCache.get(pokemon)){return false};
@@ -28,7 +34,7 @@ async function getPokemon (pokemon) {
     return true;
 }
 
-function readPokemonFromList(count) {
+async function readPokemonFromList(count) {
     currentLoadedPokemon = currentLoadedPokemon + count;
     let index = 0;
     for (const pokemon of POKEMONNAMES) {
@@ -37,9 +43,11 @@ function readPokemonFromList(count) {
         } else if (pokemonCache.has(pokemon)){
             continue;
         }
-        pokemon = pokemon.toLowerCase();
-        getPokemon(pokemon);
+        let currentPokemon = pokemon.toLowerCase();
+        await getPokemon(currentPokemon);
+        await getPokemonSpecies(currentPokemon);
         index++;
+        await renderPokemonCard(currentPokemon);
     };
     return true;
 }
@@ -56,19 +64,16 @@ function err (){
 }
 
 function getPokemonType(pokemon) {
-    // pokemonCache.get(pokemon)
-    // ["types"][0]["type"]["name"]
+    // returns array of pokemon types
     let pokemonObject = pokemonCache.get(pokemon);
     let pokemonType = [];
     for (const type of pokemonObject["types"]) {
         pokemonType.push(type["type"]["name"]); 
     }
-    return pokemonType; // returns array of pokemon types
+    return pokemonType; 
 }
 
 function getPokemonSprite(pokemon) {
-    // ["sprites"]["front_default"]
-    // ["sprites"]["other"]["official-artwork"]["front_defaul"]
     let pokemonObject = pokemonCache.get(pokemon);
     let pokemonSprite = pokemonObject["sprites"]["other"]["official-artwork"]["front_default"];
     return pokemonSprite;
@@ -109,25 +114,30 @@ function getPokemonIndex (pokemon) {
 }
 
 // renderPokemonCard - a function which renders initial cards from pokemonCache according to the current Pokemon count
-function renderPokemonCard (pokemonName){
+async function renderPokemonCard (pokemonName){
     let container = document.getElementById("card-container"); 
-    let sprite = getPokemonSprite(pokemonName);
+    let sprite = await getPokemonSprite(pokemonName);
     container.innerHTML += createPokemonCardHTML(sprite, pokemonName);
     renderPokemonType(pokemonName);
-    renderPokemonCardBackground(pokemonName);
+    await renderPokemonCardBackground(pokemonName);
     return true;
 }
 
-function renderPokemonCardBackground (pokemonName) {
-    let pokemonType = getPokemonType(pokemonName);
-    let typeColor = getTypeColor(pokemonType[0]);
+async function renderPokemonCardBackground (pokemonName) {
+    let pokemonType = await getPokemonType(pokemonName);
+    let typeColor = await getTypeColor(pokemonType[0]);
     let cardContainer = document.getElementById(`${pokemonName}-card`);
     cardContainer.classList.add(typeColor);
     // TODO testing
 }
 
 function getTypeColor(pokemonType) {
-    let type = pokemonType.pop();
+    let type; 
+    if (Array.isArray(pokemonType)) {
+        type = pokemonType[0];
+    } else {
+        type = pokemonType;
+    }
     color = POKEMONCOLOR.get(type);
     return color;
 }
@@ -386,10 +396,10 @@ function createPokemonBadgeTypeHTML (pokemonType) {
     `   
 }
 
-function createPokemonCardHTML (pokemonSprite, pokemonName) {
+function createPokemonCardHTML (pokemonSprite,pokemonName) {
     return /*html*/`
         <div class="col">
-            <div class="card h-50 rounded-4 shadow-lg" id="${pokemonName}-card" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="renderModal(${pokemonName})" >
+            <div class="card h-50 rounded-4 shadow-lg" id="${pokemonName}-card" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="renderPokemonModal('${pokemonName}')" >
                 <div class="row h-25">
                     <div class="col">
                         <div class="card-body">
@@ -414,8 +424,8 @@ function createPokemonModalListTopHTML (pokemonSpecie, pokemonHeight, pokemonWei
     return /*html*/`
         <li class="list-group-item">Info: ${pokemonFlavourText}</li>
         <li class="list-group-item">Species: ${pokemonSpecie}</li>
-        <li class="list-group-item">Height: ${pokemonHeight}</li>
-        <li class="list-group-item">Weight: ${pokemonWeight}</li>
+        <li class="list-group-item">Height: ${pokemonHeight} m</li>
+        <li class="list-group-item">Weight: ${pokemonWeight} kg</li>
         <li class="list-group-item" id="modal-body-list-ability" >
         Abilities:
         </li>

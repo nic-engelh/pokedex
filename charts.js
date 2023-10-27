@@ -1,11 +1,16 @@
-
 function renderChart (attributes) {
 
   // attributes : hp, attack, defense, specialAttack, specialDefense, speed
 
-  const ctx = document.getElementById('myChart');
-
-  const myChart = new Chart(ctx, {
+  let chartStatus = Chart.getChart("myChart"); // <canvas> id
+  if (chartStatus != undefined) {
+    chartStatus.destroy();
+  }
+  
+  let ctx = document.getElementById('myChart');
+  
+  
+    const myChart = new Chart(ctx, {
       type: 'radar',
       data: {
         labels: ['HP', 'Attack', 'Defense', 'Sp. Atk', 'Sp. Def', 'Speed'],

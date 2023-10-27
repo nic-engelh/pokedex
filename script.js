@@ -7,7 +7,7 @@ let pokemonEvolution = new Map();
 // stores key (pokemonName) and value (Pokemon Species JSON)
 let pokemonSpecies = new Map();
 // stores the current number of loaded Pokemon
-let currentLoadedPokemon = 0; 
+let CURRENTLOADEDPOKEMON = 0; 
 
 // TODO pokemonOrder map - copying the pokemoncache map for the card overview
 
@@ -16,15 +16,27 @@ async function init() {
     // call following functions to process pokemon data
     // render 12 Pokemon Cards
     // get Pokemon species for the 12 cards
-    readPokemonFromList(24);
+    addPokemonCards(4);
+    await readPokemonFromList();
+    renderPokemonCardsContainer();
 }
 
-function renderPokemonCardsOverview () {
-    for (let index = 0; index < currentLoadedPokemon; index++) {
-        let element = POKEMONNAMES[index];
-        
+window.addEventListener('scroll', async () => {
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const scrolled = window.scrollY;
+
+    if (Math.ceil(scrolled)=== scrollable){
+        addPokemonCards(4);
+        await readPokemonFromList();
+        renderPokemonCardsContainer();
     }
+})
+
+function addPokemonCards (x) {
+    CURRENTLOADEDPOKEMON += x;
+    return true;
 }
+
 
 
 async function getPokemon (pokemon) {
@@ -34,11 +46,10 @@ async function getPokemon (pokemon) {
     return true;
 }
 
-async function readPokemonFromList(count) {
-    currentLoadedPokemon = currentLoadedPokemon + count;
+async function readPokemonFromList() {
     let index = 0;
     for (const pokemon of POKEMONNAMES) {
-        if (index > currentLoadedPokemon){
+        if (index > CURRENTLOADEDPOKEMON){
             break;
         } else if (pokemonCache.has(pokemon)){
             continue;
@@ -47,9 +58,21 @@ async function readPokemonFromList(count) {
         await getPokemon(currentPokemon);
         await getPokemonSpecies(currentPokemon);
         index++;
-        await renderPokemonCard(currentPokemon);
-    };
+    }
     return true;
+}
+
+function renderPokemonCardsContainer () {
+    let i = 0;
+    document.getElementById("card-container").innerHTML = clear(); 
+    for (const [key, value] of POKEMONNAMES.entries()){
+        if (i > CURRENTLOADEDPOKEMON) {
+            break;
+        }
+        let currentPokemon = value.toLowerCase();
+        renderPokemonCard(currentPokemon);
+        i++;
+    }
 }
 
 async function getPokemonData(requestTyp, id) {
@@ -124,7 +147,7 @@ async function renderPokemonCard (pokemonName){
 }
 
 async function renderPokemonCardBackground (pokemonName) {
-    let pokemonType = await getPokemonType(pokemonName);
+    let pokemonType = getPokemonType(pokemonName);
     let typeColor = await getTypeColor(pokemonType[0]);
     let cardContainer = document.getElementById(`${pokemonName}-card`);
     cardContainer.classList.add(typeColor);
@@ -386,6 +409,14 @@ function loopingPokemonVariants (pokemonObject) {
     }
 }
 
+
+function scrollDown() {
+    if (document.documentElement.scrollTop > 350) {
+        readPokemonFromList(16);
+      }
+}
+
+
 function clear () {
     return ``;
 }
@@ -399,7 +430,7 @@ function createPokemonBadgeTypeHTML (pokemonType) {
 function createPokemonCardHTML (pokemonSprite,pokemonName) {
     return /*html*/`
         <div class="col">
-            <div class="card h-50 rounded-4 shadow-lg" id="${pokemonName}-card" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="renderPokemonModal('${pokemonName}')" >
+            <div class="card rounded-4 shadow-lg" id="${pokemonName}-card" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="renderPokemonModal('${pokemonName}')" >
                 <div class="row h-25">
                     <div class="col">
                         <div class="card-body">

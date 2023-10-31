@@ -1,7 +1,7 @@
 
 function createPokemonBadgeTypeHTML (pokemonType) {
     return /*html*/`
-        <span class="badge rounded-pill text-white text-bg-light bg-opacity-50">${pokemonType}</span>
+        <span class="badge rounded-pill text-white text-bg-light bg-opacity-50 me-1">${pokemonType}</span>
     `   
 }
 
@@ -13,7 +13,7 @@ function createPokemonCardHTML (pokemonSprite,pokemonName, pokemonTitle) {
                     <div class="col">
                         <div class="card-body">
                             <h3 class="card-title text-white  mb-4 display-7 lh-1 fw-bold">${pokemonTitle}</h3>
-                            <div class="container-fluid" id="${pokemonName}-type">
+                            <div class="container-fluid p-0" id="${pokemonName}-type">
                             </div>
                         </div>
                     </div>

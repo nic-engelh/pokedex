@@ -1,23 +1,32 @@
-function changeModalHeader(pokemonName) {
+function changeModalHeaderTitle(pokemonName) {
     let container = document.getElementById("staticBackdropLabel");
-    let pokemonType = getPokemonType(pokemonName);
     container.innerHTML = clear();
     // adds pokemon name to the modal header
     container.innerHTML = (pokemonName.toUpperCase());
-    // adds poekemon types
-    for (const type of pokemonType) {
-      container.innerHTML += createPokemonBadgeTypeHTML(type);
-    }
-    // adds pokemon index
-    container.innerHTML += getPokemonIndex(pokemonName);
   }
-  
+
+  function changeModalHeaderTypes (pokemonName) {
+    // staticBackdropLabelTypes
+    let container = document.getElementById("staticBackdropTypes");
+    container.innerHTML = clear();
+    let pokemonType = getPokemonType(pokemonName);
+    for (const type of pokemonType) {
+        container.innerHTML += createPokemonBadgeTypeHTML(type);
+    }
+  }
+
+  function changeModalHeaderIndex(pokemonName) {
+    let container = document.getElementById("staticBackdropIndex");
+    container.innerHTML = clear();
+    container.innerHTML += ("#" + getPokemonIndex(pokemonName));
+  } 
+
   function changeModalPokemonAbilities(pokemon) {
     let container = document.getElementById("modal-body-list-ability");
     let pokemonObject = pokemonCache.get(pokemon);
     let pokemonAbilities = pokemonObject["abilities"];
     container.innerHTML = clear();
-    container.innerHTML = `Abilities: `;
+    container.innerHTML = "Abilities: ";
     // adding "Ability" label
     for (const ability of pokemonAbilities) {
       let abilityName = ability["ability"]["name"];

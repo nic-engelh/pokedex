@@ -32,7 +32,6 @@
     <title>Pokedex</title>
   </head>
   <body onload="init()">
-    <div class="b-example-divider"></div>
     <div class="container-fluid px-4 py-5" id="custom-cards">
       <h2 class="pb-2 border-bottom">Pokedex</h2>
       <div
@@ -58,18 +57,25 @@
           <div class="modal-header d-flex flex-column" id="modal-header">
             <div class="container-fluid d-flex flex-row">
               <h1
-                class="modal-title fs-5 text-light fw-bold"
+                class="modal-title fs-1 text-light fw-bold d-flex flex-column justify-content-start"
                 id="staticBackdropLabel"
               >
                 <!-- Pokemon name is inserted here -->
               </h1>
               <button
                 type="button"
-                class="btn-close"
+                class="btn-close hover"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
             </div>
+            <div class="container-fluid d-flex flex-row" id="staticBackdropTypes">
+                <!-- Pokemon types is inserted here -->
+            </div>
+            <div class="container-fluid d-flex flex-row justify-content-end text-light fw-bold fs-5" id="staticBackdropIndex">
+              <!-- Pokemon in index inserted here -->
+            </div>
+
             <div class="container-fluid d-flex justify-content-between align-items-center w-100 text-light">
               <span id="modal-header-image-arrow-back" class="material-symbols-outlined hover">arrow_back_ios</span>
               <img class="img-fluid w-50" alt="" id="modal-header-image" />

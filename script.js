@@ -7,11 +7,10 @@ let pokemonEvolution = new Map();
 let pokemonSpecies = new Map();
 // stores the current number of loaded Pokemon
 let CURRENTLOADEDPOKEMON = 0;
-
 let CURRENTMODALCOLOR = null;
 
 async function init() {
-  addPokemonCards(15);
+  addPokemonCards(24);
   await readPokemonFromList();
   renderPokemonCardsContainer();
 }
@@ -130,7 +129,9 @@ async function renderPokemonModal(pokemonName) {
   changeModalImg(pokemonName);
   clearModalHeaderBackground();
   changeModalHeaderBackground(pokemonName);
-  changeModalHeader(pokemonName);
+  changeModalHeaderTitle(pokemonName);
+  changeModalHeaderTypes(pokemonName);
+  changeModalHeaderIndex(pokemonName);
   await changeModalAboutSectionTop(pokemonName);
   changeModalAboutSectionBottom(pokemonName);
   changeModalPokemonAbilities(pokemonName);

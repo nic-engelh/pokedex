@@ -15,6 +15,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
+    <link rel="icon" type="image/x-icon" href="/img/pokeball (2).png" />
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
@@ -26,20 +27,22 @@
     <script src="charts.js"></script>
     <script src="templates.js"></script>
     <script src="queries.js"></script>
+    <script src="utility.js"></script>
+    <script src="modal.component.js"></script>
     <title>Pokedex</title>
   </head>
   <body onload="init()">
     <div class="b-example-divider"></div>
-    <div class="container px-4 py-5" id="custom-cards">
+    <div class="container-fluid px-4 py-5" id="custom-cards">
       <h2 class="pb-2 border-bottom">Pokedex</h2>
       <div
-        class="row row-cols-1 row-cols-md-2 row-cols-lg-4 align-items-stretch g-4 py-5"
+        class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 row-cols-xxl-5 align-items-stretch g-4 py-5"
         id="card-container"
       >
         <!-- Pokemon cards are inserted here -->
       </div>
     </div>
-  
+
     <!-- Modal -->
     <div
       class="modal fade"
@@ -52,10 +55,7 @@
     >
       <div class="modal-dialog">
         <div class="modal-content h-75">
-          <div
-            class="modal-header d-flex flex-column"
-            id="modal-header"
-          >
+          <div class="modal-header d-flex flex-column" id="modal-header">
             <div class="container-fluid d-flex flex-row">
               <h1
                 class="modal-title fs-5 text-light fw-bold"
@@ -70,12 +70,14 @@
                 aria-label="Close"
               ></button>
             </div>
-            <img
-              class="img-fluid w-50"
-              alt=""
-              id="modal-header-image"
-            />
+            <div class="container-fluid d-flex justify-content-between align-items-center w-100 text-light">
+              <span id="modal-header-image-arrow-back" class="material-symbols-outlined hover">arrow_back_ios</span>
+              <img class="img-fluid w-50" alt="" id="modal-header-image" />
+              <span id="modal-header-image-arrow-forward" class="material-symbols-outlined hover">arrow_forward_ios</span>
+            </div>
+            
           </div>
+          
           <div class="modal-body">
             <nav>
               <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -150,7 +152,6 @@
                     id="modal-body-list-2"
                   >
                     <!-- Pokemon breeding stats are inserted here -->
-                    
                   </ul>
                 </div>
               </div>
@@ -161,7 +162,10 @@
                 aria-labelledby="nav-stats-tab"
                 tabindex="0"
               >
-                <div class="container-sm pt-4" id="modal-body-stats-canvas-container">
+                <div
+                  class="container-sm pt-4"
+                  id="modal-body-stats-canvas-container"
+                >
                   <canvas id="myChart">
                     <!-- Pokemon base_stats are inserted here -->
                   </canvas>
@@ -177,11 +181,8 @@
                 <div
                   class="container row align-items-center"
                   id="modal-body-evolution"
-                  
                 >
-                <!-- Pokemon evolution steps are inserted here -->
-
-        
+                  <!-- Pokemon evolution steps are inserted here -->
                 </div>
               </div>
 

@@ -5,14 +5,14 @@ function createPokemonBadgeTypeHTML (pokemonType) {
     `   
 }
 
-function createPokemonCardHTML (pokemonSprite,pokemonName) {
+function createPokemonCardHTML (pokemonSprite,pokemonName, pokemonTitle) {
     return /*html*/`
         <div class="col">
-            <div class="card rounded-4 shadow-lg" id="${pokemonName}-card" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="renderPokemonModal('${pokemonName}')" >
+            <div class="card rounded-4 shadow-lg hover" id="${pokemonName}-card" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="renderPokemonModal('${pokemonName}')" >
                 <div class="row h-25">
                     <div class="col">
                         <div class="card-body">
-                            <h3 class="card-title text-white  mb-4 display-6 lh-1 fw-bold">${pokemonName}</h3>
+                            <h3 class="card-title text-white  mb-4 display-7 lh-1 fw-bold">${pokemonTitle}</h3>
                             <div class="container-fluid" id="${pokemonName}-type">
                             </div>
                         </div>
@@ -83,4 +83,14 @@ function createDivHTML(id) {
           <div class="col-3" id="${id}">
           </div>  
       `;
+  }
+
+  function createArrowsHTML(){
+    /*html*/`
+        <div class="container justify-content-evenly">
+        <span class="material-symbols-outlined">arrow_back_ios</span>
+        <span class="material-symbols-outlined">arrow_forward_ios</span>
+        </div>
+    `
+
   }

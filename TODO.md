@@ -2,7 +2,7 @@
 
 - user shall see 12 pokemons up front on colored cards with the name, img and type
 - user shall click on the specific user card and open a detail card for all the specific pokemon data
-- user shall filter/search for pokemons
+- user shall filter/search for pokemons (optional)
 
 
 # Misc
@@ -12,9 +12,6 @@
 # Notes
     
 # TODO
-- modal section for evolution chain has to be done
-- modal section for evolution chain corner cases has to be done 
-- modal section for learnable pokemon moves has to be done
 - modal section difference for 2 and 1 egg group
 
 # Inspo

@@ -9,8 +9,8 @@ window.addEventListener("scroll", async () => {
   }
 });
 
-function addPokemonCards(x) {
-  CURRENTLOADEDPOKEMON += x;
+function addPokemonCards(number) {
+  CURRENTLOADEDPOKEMON += number;
   return true;
 }
 
@@ -23,11 +23,14 @@ function nextPokemon(pokemon, right) {
   let pokemonArrayIndex = POKEMON.indexOf(pokemon);
   if (right) {
     rightPokemon = POKEMON[pokemonArrayIndex + 1];
-
+    addPokemonCards(1);
+    readPokemonFromList();
     renderPokemonModal(rightPokemon.toLowerCase());
     return true;
   }
   leftPokemon = POKEMON[pokemonArrayIndex - 1];
+  addPokemonCards(1);
+  readPokemonFromList();
   renderPokemonModal(leftPokemon.toLowerCase());
   return false;
 }

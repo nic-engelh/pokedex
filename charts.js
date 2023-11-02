@@ -8,8 +8,6 @@ function renderChart(attributes) {
 
   let ctx = document.getElementById("myChart");
 
-  
-
   const chartConfigDatasets = [
     {
       label: "Attribute",
@@ -49,6 +47,5 @@ function renderChart(attributes) {
     options: chartConfigOptions,
   };
   
-
   const myChart = new Chart(ctx, chartConfigJSON );
 }

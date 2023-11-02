@@ -1,52 +1,51 @@
 window.addEventListener("scroll", async () => {
-    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-    const scrolled = window.scrollY;
-  
-    if (Math.ceil(scrolled) === scrollable) {
-      addPokemonCards(7);
-      await readPokemonFromList();
-      renderPokemonCardsContainer();
-    }
-  });
-  
-  function addPokemonCards(x) {
-    CURRENTLOADEDPOKEMON += x;
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const scrolled = window.scrollY;
+
+  if (Math.ceil(scrolled) === scrollable) {
+    addPokemonCards(7);
+    await readPokemonFromList();
+    renderPokemonCardsContainer();
+  }
+});
+
+function addPokemonCards(x) {
+  CURRENTLOADEDPOKEMON += x;
+  return true;
+}
+
+function clear() {
+  return ``;
+}
+
+function nextPokemon(pokemon, right) {
+  pokemon = capitalizeFirstLetter(pokemon);
+  let pokemonArrayIndex = POKEMON.indexOf(pokemon);
+  if (right) {
+    rightPokemon = POKEMON[pokemonArrayIndex + 1];
+
+    renderPokemonModal(rightPokemon.toLowerCase());
     return true;
   }
+  leftPokemon = POKEMON[pokemonArrayIndex - 1];
+  renderPokemonModal(leftPokemon.toLowerCase());
+  return false;
+}
 
-  function clear() {
-    return ``;
-  }
-  
-  function nextPokemon (pokemon, right) {
-    pokemon = capitalizeFirstLetter(pokemon);
-    let pokemonArrayIndex = POKEMON.indexOf(pokemon);
-    if (right) {
-        rightPokemon = POKEMON[(pokemonArrayIndex + 1)];
+function addOnclickAttribute(pokemon) {
+  let element1 = document.getElementById("modal-header-image-arrow-forward");
+  let element2 = document.getElementById("modal-header-image-arrow-back");
+  element1.setAttribute("onclick", `nextPokemon ("${pokemon}", true)`);
+  element2.setAttribute("onclick", `nextPokemon ("${pokemon}", false)`);
+}
 
-        renderPokemonModal((rightPokemon.toLowerCase()));
-        return true
-    } 
-    leftPokemon = POKEMON[(pokemonArrayIndex - 1)]
-    renderPokemonModal((leftPokemon.toLowerCase()));
-    return false
-  }
-
-
-  function addOnclickAttribute(pokemon) {
-    let element1 = document.getElementById("modal-header-image-arrow-forward");
-    let element2 = document.getElementById("modal-header-image-arrow-back");
-    element1.setAttribute("onclick", `nextPokemon ("${pokemon}", true)`);
-    element2.setAttribute("onclick", `nextPokemon ("${pokemon}", false)`);
-  }
- 
-  function capitalizeFirstLetter(string) {
-    return string[0].toUpperCase() + string.slice(1);
+function capitalizeFirstLetter(string) {
+  return string[0].toUpperCase() + string.slice(1);
 }
 
 // flavour text needs to cleared of \n \f with lastIndexOf() string method
 function clearingString(text) {
-    text = text.replaceAll("\n", " ");
-    text = text.replaceAll("\f", " ");
-    return text;
-  }
+  text = text.replaceAll("\n", " ");
+  text = text.replaceAll("\f", " ");
+  return text;
+}

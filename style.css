@@ -141,3 +141,17 @@ img {
   .hover {
     cursor: pointer;
   }
+  
+  body::after {
+    content: "";
+    background: url(/img/pokeball-final.png);
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;   
+  }

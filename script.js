@@ -91,7 +91,11 @@ async function renderPokemonCard(pokemonName) {
   let container = document.getElementById("card-container");
   let sprite = await getPokemonSprite(pokemonName);
   let pokemonTitle = pokemonName.toUpperCase();
-  container.innerHTML += createPokemonCardHTML(sprite, pokemonName, pokemonTitle);
+  container.innerHTML += createPokemonCardHTML(
+    sprite,
+    pokemonName,
+    pokemonTitle
+  );
   renderPokemonType(pokemonName);
   await renderPokemonCardBackground(pokemonName);
   return true;
@@ -140,4 +144,3 @@ async function renderPokemonModal(pokemonName) {
   changeModalMoveSection(pokemonName);
   addOnclickAttribute(pokemonName);
 }
-

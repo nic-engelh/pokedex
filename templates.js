@@ -1,12 +1,11 @@
-
-function createPokemonBadgeTypeHTML (pokemonType) {
-    return /*html*/`
+function createPokemonBadgeTypeHTML(pokemonType) {
+  return /*html*/ `
         <span class="badge rounded-pill text-white text-bg-light bg-opacity-50 me-1">${pokemonType}</span>
-    `   
+    `;
 }
 
-function createPokemonCardHTML (pokemonSprite,pokemonName, pokemonTitle) {
-    return /*html*/`
+function createPokemonCardHTML(pokemonSprite, pokemonName, pokemonTitle) {
+  return /*html*/ `
         <div class="col">
             <div class="card rounded-4 shadow-lg hover" id="${pokemonName}-card" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="renderPokemonModal('${pokemonName}')" >
                 <div class="row h-25">
@@ -28,9 +27,14 @@ function createPokemonCardHTML (pokemonSprite,pokemonName, pokemonTitle) {
     `;
 }
 
-function createPokemonModalListTopHTML (pokemonSpecie, pokemonHeight, pokemonWeight, pokemonFlavourText) {
-    // insert into id="modal-body-list-1"
-    return /*html*/`
+function createPokemonModalListTopHTML(
+  pokemonSpecie,
+  pokemonHeight,
+  pokemonWeight,
+  pokemonFlavourText
+) {
+  // insert into id="modal-body-list-1"
+  return /*html*/ `
         <li class="list-group-item">Info: ${pokemonFlavourText}</li>
         <li class="list-group-item">Species: ${pokemonSpecie}</li>
         <li class="list-group-item">Height: ${pokemonHeight} m</li>
@@ -42,9 +46,14 @@ function createPokemonModalListTopHTML (pokemonSpecie, pokemonHeight, pokemonWei
 }
 
 // genera, gender, eggGroup1, generation
-function createPokemonModalListBottomHTML ( pokemonGenera, pokemonGender, pokemonEggGroup1, pokemonGeneration) {
-    // insert into id="modal-body-list-2"
-    return /*html*/`
+function createPokemonModalListBottomHTML(
+  pokemonGenera,
+  pokemonGender,
+  pokemonEggGroup1,
+  pokemonGeneration
+) {
+  // insert into id="modal-body-list-2"
+  return /*html*/ `
         <li class="list-group-item">Category: ${pokemonGenera}</li>
         <li class="list-group-item">Gender: ${pokemonGender}</li>
         <li class="list-group-item">Egg Group: ${pokemonEggGroup1}</li>
@@ -52,45 +61,48 @@ function createPokemonModalListBottomHTML ( pokemonGenera, pokemonGender, pokemo
     `;
 }
 
-function createPokemonEvolutionStepHTML (pokemonSprite,pokemonName, pokemonIndex) {
-    return /*html*/`
+function createPokemonEvolutionStepHTML(
+  pokemonSprite,
+  pokemonName,
+  pokemonIndex
+) {
+  return /*html*/ `
         <div class="col" id="modal-body-evolution-Step-${pokemonName}">
             <img class="h-50 w-50" src= "${pokemonSprite}" alt="Picutre of ${pokemonName}">
             <h6>${pokemonName}</h6>
             <h6>#${pokemonIndex}</h6>
         </div>
-    `
+    `;
 }
 
-function createChevronHTML (){
-    return /*html*/`
+function createChevronHTML() {
+  return /*html*/ `
         <span class="col material-symbols-outlined fs-1">
             chevron_right
         </span>
-    `
+    `;
 }
 
-function createPokemonMovesListHTML (moveName) {
-    return /*html*/`
+function createPokemonMovesListHTML(moveName) {
+  return /*html*/ `
         <div class="col-md-auto">
             <span class="badge rounded-pill text-bg-secondary">${moveName}</span>          
         </div>
-    `
+    `;
 }
 
 function createDivHTML(id) {
-    return /*html*/ `
+  return /*html*/ `
           <div class="col-3" id="${id}">
           </div>  
       `;
-  }
+}
 
-  function createArrowsHTML(){
-    /*html*/`
+function createArrowsHTML() {
+  /*html*/ `
         <div class="container justify-content-evenly">
         <span class="material-symbols-outlined">arrow_back_ios</span>
         <span class="material-symbols-outlined">arrow_forward_ios</span>
         </div>
-    `
-
-  }
+    `;
+}

@@ -98,7 +98,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    background-image: url(/wp-content/uploads/2010/11/tandem.jpg); 
+    background-image: url("/wp-content/uploads/2010/11/tandem.jpg"); 
     width: 100%;
     height: 100%;
     opacity : 0.2;
@@ -144,7 +144,7 @@ img {
   
   body::after {
     content: "";
-    background: url(/img/pokeball-final.png);
+    background: url("./img/pokeball-final.png");
     background-repeat:no-repeat;
     background-attachment:fixed;
     background-position: center;

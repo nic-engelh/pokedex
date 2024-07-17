@@ -156,3 +156,13 @@ img {
     position: absolute;
     z-index: -1;   
   }
+
+  dialog {
+    text-decoration: unset;
+    background-color: unset;
+    border: unset;
+  }
+
+  dialog:focus {
+    outline: none; /* Removes the outline completely */
+  }

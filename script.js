@@ -10,9 +10,11 @@ let CURRENTLOADEDPOKEMON = 0;
 let CURRENTMODALCOLOR = null;
 
 async function init() {
+  toggleLoadingModal(true)
   addPokemonCards(24);
   await readPokemonFromList();
   renderPokemonCardsContainer();
+  toggleLoadingModal(false);
 }
 
 async function readPokemonFromList() {

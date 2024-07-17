@@ -3,9 +3,11 @@ window.addEventListener("scroll", async () => {
   const scrolled = window.scrollY;
 
   if (Math.ceil(scrolled) === scrollable) {
+    toggleLoadingModal(true);
     addPokemonCards(7);
     await readPokemonFromList();
     renderPokemonCardsContainer();
+    toggleLoadingModal(false);
   }
 });
 
@@ -51,4 +53,10 @@ function clearingString(text) {
   text = text.replaceAll("\n", " ");
   text = text.replaceAll("\f", " ");
   return text;
+}
+
+function toggleLoadingModal (boolean) {
+  let element = document.getElementById("dialog-loading");
+  if (boolean) element.show();
+  if (!boolean) element.close();
 }

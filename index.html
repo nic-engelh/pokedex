@@ -41,7 +41,6 @@
         <!-- Pokemon cards are inserted here -->
       </div>
     </div>
-
     <!-- Modal -->
     <div
       class="modal fade"
@@ -69,21 +68,36 @@
                 aria-label="Close"
               ></button>
             </div>
-            <div class="container-fluid d-flex flex-row" id="staticBackdropTypes">
-                <!-- Pokemon types is inserted here -->
+            <div
+              class="container-fluid d-flex flex-row"
+              id="staticBackdropTypes"
+            >
+              <!-- Pokemon types is inserted here -->
             </div>
-            <div class="container-fluid d-flex flex-row justify-content-end text-light fw-bold fs-5" id="staticBackdropIndex">
+            <div
+              class="container-fluid d-flex flex-row justify-content-end text-light fw-bold fs-5"
+              id="staticBackdropIndex"
+            >
               <!-- Pokemon in index inserted here -->
             </div>
 
-            <div class="container-fluid d-flex justify-content-between align-items-center w-100 text-light">
-              <span id="modal-header-image-arrow-back" class="material-symbols-outlined hover">arrow_back_ios</span>
+            <div
+              class="container-fluid d-flex justify-content-between align-items-center w-100 text-light"
+            >
+              <span
+                id="modal-header-image-arrow-back"
+                class="material-symbols-outlined hover"
+                >arrow_back_ios</span
+              >
               <img class="img-fluid w-50" alt="" id="modal-header-image" />
-              <span id="modal-header-image-arrow-forward" class="material-symbols-outlined hover">arrow_forward_ios</span>
+              <span
+                id="modal-header-image-arrow-forward"
+                class="material-symbols-outlined hover"
+                >arrow_forward_ios</span
+              >
             </div>
-            
           </div>
-          
+
           <div class="modal-body">
             <nav>
               <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -211,6 +225,13 @@
         </div>
       </div>
     </div>
+    <!-- Loading Modal -->
+    <dialog id="dialog-loading" class="">
+      <button class="btn btn-danger" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        <span role="status">Loading...</span>
+      </button>
+    </dialog>
     <script defer src="script.js"></script>
   </body>
 </html>
